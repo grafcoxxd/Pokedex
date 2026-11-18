@@ -1,0 +1,2820 @@
+{
+  "version": 1,
+  "binders": [
+    {
+      "id": 1,
+      "name": "Kanto",
+      "entries": [
+        {
+          "dex": 1,
+          "name": "Bisasam",
+          "kind": "home"
+        },
+        {
+          "dex": 2,
+          "name": "Bisaknosp",
+          "kind": "home"
+        },
+        {
+          "dex": 3,
+          "name": "Bisaflor",
+          "kind": "home"
+        },
+        {
+          "dex": 4,
+          "name": "Glumanda",
+          "kind": "home"
+        },
+        {
+          "dex": 5,
+          "name": "Glutexo",
+          "kind": "home"
+        },
+        {
+          "dex": 6,
+          "name": "Glurak",
+          "kind": "home"
+        },
+        {
+          "dex": 7,
+          "name": "Schiggy",
+          "kind": "home"
+        },
+        {
+          "dex": 8,
+          "name": "Schillok",
+          "kind": "home"
+        },
+        {
+          "dex": 9,
+          "name": "Turtok",
+          "kind": "home"
+        },
+        {
+          "dex": 10,
+          "name": "Raupy",
+          "kind": "home"
+        },
+        {
+          "dex": 11,
+          "name": "Safcon",
+          "kind": "home"
+        },
+        {
+          "dex": 12,
+          "name": "Smettbo",
+          "kind": "home"
+        },
+        {
+          "dex": 13,
+          "name": "Hornliu",
+          "kind": "home"
+        },
+        {
+          "dex": 14,
+          "name": "Kokuna",
+          "kind": "home"
+        },
+        {
+          "dex": 15,
+          "name": "Bibor",
+          "kind": "home"
+        },
+        {
+          "dex": 16,
+          "name": "Taubsi",
+          "kind": "home"
+        },
+        {
+          "dex": 17,
+          "name": "Tauboga",
+          "kind": "home"
+        },
+        {
+          "dex": 18,
+          "name": "Tauboss",
+          "kind": "home"
+        },
+        {
+          "dex": 19,
+          "name": "Rattfratz",
+          "kind": "home"
+        },
+        {
+          "dex": 20,
+          "name": "Rattikarl",
+          "kind": "home"
+        },
+        {
+          "dex": 21,
+          "name": "Habitak",
+          "kind": "home"
+        },
+        {
+          "dex": 22,
+          "name": "Ibitak",
+          "kind": "home"
+        },
+        {
+          "dex": 23,
+          "name": "Rettan",
+          "kind": "home"
+        },
+        {
+          "dex": 24,
+          "name": "Arbok",
+          "kind": "home"
+        },
+        {
+          "dex": 172,
+          "name": "Pichu",
+          "kind": "home"
+        },
+        {
+          "dex": 25,
+          "name": "Pikachu",
+          "kind": "home"
+        },
+        {
+          "dex": 26,
+          "name": "Raichu",
+          "kind": "home"
+        },
+        {
+          "dex": 27,
+          "name": "Sandan",
+          "kind": "home"
+        },
+        {
+          "dex": 28,
+          "name": "Sandamer",
+          "kind": "home"
+        },
+        {
+          "dex": 29,
+          "name": "Nidoran♀",
+          "kind": "home"
+        },
+        {
+          "dex": 30,
+          "name": "Nidorina",
+          "kind": "home"
+        },
+        {
+          "dex": 31,
+          "name": "Nidoqueen",
+          "kind": "home"
+        },
+        {
+          "dex": 32,
+          "name": "Nidoran♂",
+          "kind": "home"
+        },
+        {
+          "dex": 33,
+          "name": "Nidorino",
+          "kind": "home"
+        },
+        {
+          "dex": 34,
+          "name": "Nidoking",
+          "kind": "home"
+        },
+        {
+          "dex": 173,
+          "name": "Pii",
+          "kind": "home"
+        },
+        {
+          "dex": 35,
+          "name": "Piepi",
+          "kind": "home"
+        },
+        {
+          "dex": 36,
+          "name": "Pixi",
+          "kind": "home"
+        },
+        {
+          "dex": 37,
+          "name": "Vulpix",
+          "kind": "home"
+        },
+        {
+          "dex": 38,
+          "name": "Vulnona",
+          "kind": "home"
+        },
+        {
+          "dex": 174,
+          "name": "Fluffeluff",
+          "kind": "home"
+        },
+        {
+          "dex": 39,
+          "name": "Pummeluff",
+          "kind": "home"
+        },
+        {
+          "dex": 40,
+          "name": "Knuddeluff",
+          "kind": "home"
+        },
+        {
+          "dex": 41,
+          "name": "Zubat",
+          "kind": "home"
+        },
+        {
+          "dex": 42,
+          "name": "Golbat",
+          "kind": "home"
+        },
+        {
+          "dex": 169,
+          "name": "Iksbat",
+          "kind": "home"
+        },
+        {
+          "dex": 43,
+          "name": "Myrapla",
+          "kind": "home"
+        },
+        {
+          "dex": 44,
+          "name": "Duflor",
+          "kind": "home"
+        },
+        {
+          "dex": 45,
+          "name": "Giflor",
+          "kind": "home"
+        },
+        {
+          "dex": 182,
+          "name": "Blubella",
+          "kind": "home"
+        },
+        {
+          "dex": 46,
+          "name": "Paras",
+          "kind": "home"
+        },
+        {
+          "dex": 47,
+          "name": "Parasek",
+          "kind": "home"
+        },
+        {
+          "dex": 48,
+          "name": "Bluzuk",
+          "kind": "home"
+        },
+        {
+          "dex": 49,
+          "name": "Omot",
+          "kind": "home"
+        },
+        {
+          "dex": 50,
+          "name": "Digda",
+          "kind": "home"
+        },
+        {
+          "dex": 51,
+          "name": "Digdri",
+          "kind": "home"
+        },
+        {
+          "dex": 52,
+          "name": "Mauzi",
+          "kind": "home"
+        },
+        {
+          "dex": 53,
+          "name": "Snobilikat",
+          "kind": "home"
+        },
+        {
+          "dex": 863,
+          "name": "Mauzinger",
+          "kind": "home"
+        },
+        {
+          "dex": 54,
+          "name": "Enton",
+          "kind": "home"
+        },
+        {
+          "dex": 55,
+          "name": "Entoron",
+          "kind": "home"
+        },
+        {
+          "dex": 56,
+          "name": "Menki",
+          "kind": "home"
+        },
+        {
+          "dex": 57,
+          "name": "Rasaff",
+          "kind": "home"
+        },
+        {
+          "dex": 979,
+          "name": "Epitaff",
+          "kind": "home"
+        },
+        {
+          "dex": 58,
+          "name": "Fukano",
+          "kind": "home"
+        },
+        {
+          "dex": 59,
+          "name": "Arkani",
+          "kind": "home"
+        },
+        {
+          "dex": 60,
+          "name": "Quapsel",
+          "kind": "home"
+        },
+        {
+          "dex": 61,
+          "name": "Quaputzi",
+          "kind": "home"
+        },
+        {
+          "dex": 62,
+          "name": "Quappo",
+          "kind": "home"
+        },
+        {
+          "dex": 186,
+          "name": "Quaxo",
+          "kind": "home"
+        },
+        {
+          "dex": 63,
+          "name": "Abra",
+          "kind": "home"
+        },
+        {
+          "dex": 64,
+          "name": "Kadabra",
+          "kind": "home"
+        },
+        {
+          "dex": 65,
+          "name": "Simsala",
+          "kind": "home"
+        },
+        {
+          "dex": 66,
+          "name": "Machollo",
+          "kind": "home"
+        },
+        {
+          "dex": 67,
+          "name": "Maschock",
+          "kind": "home"
+        },
+        {
+          "dex": 68,
+          "name": "Machomei",
+          "kind": "home"
+        },
+        {
+          "dex": 69,
+          "name": "Knofensa",
+          "kind": "home"
+        },
+        {
+          "dex": 70,
+          "name": "Ultrigaria",
+          "kind": "home"
+        },
+        {
+          "dex": 71,
+          "name": "Sarzenia",
+          "kind": "home"
+        },
+        {
+          "dex": 72,
+          "name": "Tentacha",
+          "kind": "home"
+        },
+        {
+          "dex": 73,
+          "name": "Tentoxa",
+          "kind": "home"
+        },
+        {
+          "dex": 74,
+          "name": "Kleinstein",
+          "kind": "home"
+        },
+        {
+          "dex": 75,
+          "name": "Georok",
+          "kind": "home"
+        },
+        {
+          "dex": 76,
+          "name": "Geowaz",
+          "kind": "home"
+        },
+        {
+          "dex": 77,
+          "name": "Ponita",
+          "kind": "home"
+        },
+        {
+          "dex": 78,
+          "name": "Gallopa",
+          "kind": "home"
+        },
+        {
+          "dex": 79,
+          "name": "Flegmon",
+          "kind": "home"
+        },
+        {
+          "dex": 80,
+          "name": "Lahmus",
+          "kind": "home"
+        },
+        {
+          "dex": 199,
+          "name": "Laschoking",
+          "kind": "home"
+        },
+        {
+          "dex": 81,
+          "name": "Magnetilo",
+          "kind": "home"
+        },
+        {
+          "dex": 82,
+          "name": "Magneton",
+          "kind": "home"
+        },
+        {
+          "dex": 462,
+          "name": "Magnezone",
+          "kind": "home"
+        },
+        {
+          "dex": 83,
+          "name": "Porenta",
+          "kind": "home"
+        },
+        {
+          "dex": 865,
+          "name": "Lauchzelot",
+          "kind": "home"
+        },
+        {
+          "dex": 84,
+          "name": "Dodu",
+          "kind": "home"
+        },
+        {
+          "dex": 85,
+          "name": "Dodri",
+          "kind": "home"
+        },
+        {
+          "dex": 86,
+          "name": "Jurob",
+          "kind": "home"
+        },
+        {
+          "dex": 87,
+          "name": "Jugong",
+          "kind": "home"
+        },
+        {
+          "dex": 88,
+          "name": "Sleima",
+          "kind": "home"
+        },
+        {
+          "dex": 89,
+          "name": "Sleimok",
+          "kind": "home"
+        },
+        {
+          "dex": 90,
+          "name": "Muschas",
+          "kind": "home"
+        },
+        {
+          "dex": 91,
+          "name": "Austos",
+          "kind": "home"
+        },
+        {
+          "dex": 92,
+          "name": "Nebulak",
+          "kind": "home"
+        },
+        {
+          "dex": 93,
+          "name": "Alpollo",
+          "kind": "home"
+        },
+        {
+          "dex": 94,
+          "name": "Gengar",
+          "kind": "home"
+        },
+        {
+          "dex": 95,
+          "name": "Onix",
+          "kind": "home"
+        },
+        {
+          "dex": 208,
+          "name": "Stahlos",
+          "kind": "home"
+        },
+        {
+          "dex": 96,
+          "name": "Traumato",
+          "kind": "home"
+        },
+        {
+          "dex": 97,
+          "name": "Hypno",
+          "kind": "home"
+        },
+        {
+          "dex": 98,
+          "name": "Krabby",
+          "kind": "home"
+        },
+        {
+          "dex": 99,
+          "name": "Kingler",
+          "kind": "home"
+        },
+        {
+          "dex": 100,
+          "name": "Voltobal",
+          "kind": "home"
+        },
+        {
+          "dex": 101,
+          "name": "Lektrobal",
+          "kind": "home"
+        },
+        {
+          "dex": 102,
+          "name": "Owei",
+          "kind": "home"
+        },
+        {
+          "dex": 103,
+          "name": "Kokowei",
+          "kind": "home"
+        },
+        {
+          "dex": 104,
+          "name": "Tragosso",
+          "kind": "home"
+        },
+        {
+          "dex": 105,
+          "name": "Knogga",
+          "kind": "home"
+        },
+        {
+          "dex": 236,
+          "name": "Rabauz",
+          "kind": "home"
+        },
+        {
+          "dex": 106,
+          "name": "Kicklee",
+          "kind": "home"
+        },
+        {
+          "dex": 107,
+          "name": "Nockchan",
+          "kind": "home"
+        },
+        {
+          "dex": 237,
+          "name": "Kapoera",
+          "kind": "home"
+        },
+        {
+          "dex": 108,
+          "name": "Schlurp",
+          "kind": "home"
+        },
+        {
+          "dex": 463,
+          "name": "Schlurplek",
+          "kind": "home"
+        },
+        {
+          "dex": 109,
+          "name": "Smogon",
+          "kind": "home"
+        },
+        {
+          "dex": 110,
+          "name": "Smogmog",
+          "kind": "home"
+        },
+        {
+          "dex": 111,
+          "name": "Rihorn",
+          "kind": "home"
+        },
+        {
+          "dex": 112,
+          "name": "Rizeros",
+          "kind": "home"
+        },
+        {
+          "dex": 464,
+          "name": "Rihornior",
+          "kind": "home"
+        },
+        {
+          "dex": 440,
+          "name": "Wonneira",
+          "kind": "home"
+        },
+        {
+          "dex": 113,
+          "name": "Chaneira",
+          "kind": "home"
+        },
+        {
+          "dex": 242,
+          "name": "Heiteira",
+          "kind": "home"
+        },
+        {
+          "dex": 114,
+          "name": "Tangela",
+          "kind": "home"
+        },
+        {
+          "dex": 465,
+          "name": "Tangoloss",
+          "kind": "home"
+        },
+        {
+          "dex": 115,
+          "name": "Kangama",
+          "kind": "home"
+        },
+        {
+          "dex": 116,
+          "name": "Seeper",
+          "kind": "home"
+        },
+        {
+          "dex": 117,
+          "name": "Seemon",
+          "kind": "home"
+        },
+        {
+          "dex": 230,
+          "name": "Seedraking",
+          "kind": "home"
+        },
+        {
+          "dex": 118,
+          "name": "Goldini",
+          "kind": "home"
+        },
+        {
+          "dex": 119,
+          "name": "Golking",
+          "kind": "home"
+        },
+        {
+          "dex": 120,
+          "name": "Sterndu",
+          "kind": "home"
+        },
+        {
+          "dex": 121,
+          "name": "Starmie",
+          "kind": "home"
+        },
+        {
+          "dex": 439,
+          "name": "Pantimimi",
+          "kind": "home"
+        },
+        {
+          "dex": 122,
+          "name": "Pantimos",
+          "kind": "home"
+        },
+        {
+          "dex": 866,
+          "name": "Pantifrost",
+          "kind": "home"
+        },
+        {
+          "dex": 123,
+          "name": "Sichlor",
+          "kind": "home"
+        },
+        {
+          "dex": 212,
+          "name": "Scherox",
+          "kind": "home"
+        },
+        {
+          "dex": 900,
+          "name": "Axantor",
+          "kind": "home"
+        },
+        {
+          "dex": 238,
+          "name": "Kussilla",
+          "kind": "home"
+        },
+        {
+          "dex": 124,
+          "name": "Rossana",
+          "kind": "home"
+        },
+        {
+          "dex": 239,
+          "name": "Elekid",
+          "kind": "home"
+        },
+        {
+          "dex": 125,
+          "name": "Elektek",
+          "kind": "home"
+        },
+        {
+          "dex": 466,
+          "name": "Elevoltek",
+          "kind": "home"
+        },
+        {
+          "dex": 240,
+          "name": "Magby",
+          "kind": "home"
+        },
+        {
+          "dex": 126,
+          "name": "Magmar",
+          "kind": "home"
+        },
+        {
+          "dex": 467,
+          "name": "Magbrant",
+          "kind": "home"
+        },
+        {
+          "dex": 127,
+          "name": "Pinsir",
+          "kind": "home"
+        },
+        {
+          "dex": 128,
+          "name": "Tauros",
+          "kind": "home"
+        },
+        {
+          "dex": 129,
+          "name": "Karpador",
+          "kind": "home"
+        },
+        {
+          "dex": 130,
+          "name": "Garados",
+          "kind": "home"
+        },
+        {
+          "dex": 131,
+          "name": "Lapras",
+          "kind": "home"
+        },
+        {
+          "dex": 132,
+          "name": "Ditto",
+          "kind": "home"
+        },
+        {
+          "dex": 133,
+          "name": "Evoli",
+          "kind": "home"
+        },
+        {
+          "dex": 134,
+          "name": "Aquana",
+          "kind": "home"
+        },
+        {
+          "dex": 135,
+          "name": "Blitza",
+          "kind": "home"
+        },
+        {
+          "dex": 136,
+          "name": "Flamara",
+          "kind": "home"
+        },
+        {
+          "dex": 196,
+          "name": "Psiana",
+          "kind": "home"
+        },
+        {
+          "dex": 197,
+          "name": "Nachtara",
+          "kind": "home"
+        },
+        {
+          "dex": 470,
+          "name": "Folipurba",
+          "kind": "home"
+        },
+        {
+          "dex": 471,
+          "name": "Glaziola",
+          "kind": "home"
+        },
+        {
+          "dex": 700,
+          "name": "Feelinara",
+          "kind": "home"
+        },
+        {
+          "dex": 137,
+          "name": "Porygon",
+          "kind": "home"
+        },
+        {
+          "dex": 233,
+          "name": "Porygon2",
+          "kind": "home"
+        },
+        {
+          "dex": 474,
+          "name": "Porygon-Z",
+          "kind": "home"
+        },
+        {
+          "dex": 138,
+          "name": "Amonitas",
+          "kind": "home"
+        },
+        {
+          "dex": 139,
+          "name": "Amoroso",
+          "kind": "home"
+        },
+        {
+          "dex": 140,
+          "name": "Kabuto",
+          "kind": "home"
+        },
+        {
+          "dex": 141,
+          "name": "Kabutops",
+          "kind": "home"
+        },
+        {
+          "dex": 142,
+          "name": "Aerodactyl",
+          "kind": "home"
+        },
+        {
+          "dex": 446,
+          "name": "Mampfaxo",
+          "kind": "home"
+        },
+        {
+          "dex": 143,
+          "name": "Relaxo",
+          "kind": "home"
+        },
+        {
+          "dex": 144,
+          "name": "Arktos",
+          "kind": "home"
+        },
+        {
+          "dex": 145,
+          "name": "Zapdos",
+          "kind": "home"
+        },
+        {
+          "dex": 146,
+          "name": "Lavados",
+          "kind": "home"
+        },
+        {
+          "dex": 147,
+          "name": "Dratini",
+          "kind": "home"
+        },
+        {
+          "dex": 148,
+          "name": "Dragonir",
+          "kind": "home"
+        },
+        {
+          "dex": 149,
+          "name": "Dragoran",
+          "kind": "home"
+        },
+        {
+          "dex": 150,
+          "name": "Mewtu",
+          "kind": "home"
+        },
+        {
+          "dex": 151,
+          "name": "Mew",
+          "kind": "home"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Johto",
+      "entries": [
+        {
+          "dex": 152,
+          "name": "Endivie",
+          "kind": "home"
+        },
+        {
+          "dex": 153,
+          "name": "Lorblatt",
+          "kind": "home"
+        },
+        {
+          "dex": 154,
+          "name": "Meganie",
+          "kind": "home"
+        },
+        {
+          "dex": 155,
+          "name": "Feurigel",
+          "kind": "home"
+        },
+        {
+          "dex": 156,
+          "name": "Igelavar",
+          "kind": "home"
+        },
+        {
+          "dex": 157,
+          "name": "Tornupto",
+          "kind": "home"
+        },
+        {
+          "dex": 158,
+          "name": "Karnimani",
+          "kind": "home"
+        },
+        {
+          "dex": 159,
+          "name": "Tyracroc",
+          "kind": "home"
+        },
+        {
+          "dex": 160,
+          "name": "Impergator",
+          "kind": "home"
+        },
+        {
+          "dex": 161,
+          "name": "Wiesor",
+          "kind": "home"
+        },
+        {
+          "dex": 162,
+          "name": "Wiesenior",
+          "kind": "home"
+        },
+        {
+          "dex": 163,
+          "name": "Hoothoot",
+          "kind": "home"
+        },
+        {
+          "dex": 164,
+          "name": "Noctuh",
+          "kind": "home"
+        },
+        {
+          "dex": 165,
+          "name": "Ledyba",
+          "kind": "home"
+        },
+        {
+          "dex": 166,
+          "name": "Ledian",
+          "kind": "home"
+        },
+        {
+          "dex": 167,
+          "name": "Webarak",
+          "kind": "home"
+        },
+        {
+          "dex": 168,
+          "name": "Ariados",
+          "kind": "home"
+        },
+        {
+          "dex": 169,
+          "name": "Iksbat",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 170,
+          "name": "Lampi",
+          "kind": "home"
+        },
+        {
+          "dex": 171,
+          "name": "Lanturn",
+          "kind": "home"
+        },
+        {
+          "dex": 172,
+          "name": "Pichu",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 173,
+          "name": "Pii",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 174,
+          "name": "Fluffeluff",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 175,
+          "name": "Togepi",
+          "kind": "home"
+        },
+        {
+          "dex": 176,
+          "name": "Togetic",
+          "kind": "home"
+        },
+        {
+          "dex": 468,
+          "name": "Togekiss",
+          "kind": "home"
+        },
+        {
+          "dex": 177,
+          "name": "Natu",
+          "kind": "home"
+        },
+        {
+          "dex": 178,
+          "name": "Xatu",
+          "kind": "home"
+        },
+        {
+          "dex": 179,
+          "name": "Voltilamm",
+          "kind": "home"
+        },
+        {
+          "dex": 180,
+          "name": "Waaty",
+          "kind": "home"
+        },
+        {
+          "dex": 181,
+          "name": "Ampharos",
+          "kind": "home"
+        },
+        {
+          "dex": 182,
+          "name": "Blubella",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 298,
+          "name": "Azurill",
+          "kind": "home"
+        },
+        {
+          "dex": 183,
+          "name": "Marill",
+          "kind": "home"
+        },
+        {
+          "dex": 184,
+          "name": "Azumarill",
+          "kind": "home"
+        },
+        {
+          "dex": 438,
+          "name": "Mobai",
+          "kind": "home"
+        },
+        {
+          "dex": 185,
+          "name": "Mogelbaum",
+          "kind": "home"
+        },
+        {
+          "dex": 186,
+          "name": "Quaxo",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 187,
+          "name": "Hoppspross",
+          "kind": "home"
+        },
+        {
+          "dex": 188,
+          "name": "Hubelupf",
+          "kind": "home"
+        },
+        {
+          "dex": 189,
+          "name": "Papungha",
+          "kind": "home"
+        },
+        {
+          "dex": 190,
+          "name": "Griffel",
+          "kind": "home"
+        },
+        {
+          "dex": 424,
+          "name": "Ambidiffel",
+          "kind": "home"
+        },
+        {
+          "dex": 191,
+          "name": "Sonnkern",
+          "kind": "home"
+        },
+        {
+          "dex": 192,
+          "name": "Sonnflora",
+          "kind": "home"
+        },
+        {
+          "dex": 193,
+          "name": "Yanma",
+          "kind": "home"
+        },
+        {
+          "dex": 469,
+          "name": "Yanmega",
+          "kind": "home"
+        },
+        {
+          "dex": 194,
+          "name": "Felino",
+          "kind": "home"
+        },
+        {
+          "dex": 195,
+          "name": "Morlord",
+          "kind": "home"
+        },
+        {
+          "dex": 980,
+          "name": "Suelord",
+          "kind": "home"
+        },
+        {
+          "dex": 196,
+          "name": "Psiana",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 197,
+          "name": "Nachtara",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 198,
+          "name": "Kramurx",
+          "kind": "home"
+        },
+        {
+          "dex": 430,
+          "name": "Kramshef",
+          "kind": "home"
+        },
+        {
+          "dex": 199,
+          "name": "Laschoking",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 200,
+          "name": "Traunfugil",
+          "kind": "home"
+        },
+        {
+          "dex": 429,
+          "name": "Traunmagil",
+          "kind": "home"
+        },
+        {
+          "dex": 201,
+          "name": "Icognito",
+          "kind": "home"
+        },
+        {
+          "dex": 360,
+          "name": "Isso",
+          "kind": "home"
+        },
+        {
+          "dex": 202,
+          "name": "Woingenau",
+          "kind": "home"
+        },
+        {
+          "dex": 203,
+          "name": "Girafarig",
+          "kind": "home"
+        },
+        {
+          "dex": 981,
+          "name": "Farigiraf",
+          "kind": "home"
+        },
+        {
+          "dex": 204,
+          "name": "Tannza",
+          "kind": "home"
+        },
+        {
+          "dex": 205,
+          "name": "Forstellka",
+          "kind": "home"
+        },
+        {
+          "dex": 206,
+          "name": "Dummisel",
+          "kind": "home"
+        },
+        {
+          "dex": 982,
+          "name": "Dummimisel",
+          "kind": "home"
+        },
+        {
+          "dex": 207,
+          "name": "Skorgla",
+          "kind": "home"
+        },
+        {
+          "dex": 472,
+          "name": "Skorgro",
+          "kind": "home"
+        },
+        {
+          "dex": 208,
+          "name": "Stahlos",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 209,
+          "name": "Snubbull",
+          "kind": "home"
+        },
+        {
+          "dex": 210,
+          "name": "Granbull",
+          "kind": "home"
+        },
+        {
+          "dex": 211,
+          "name": "Baldorfish",
+          "kind": "home"
+        },
+        {
+          "dex": 904,
+          "name": "Myriador",
+          "kind": "home"
+        },
+        {
+          "dex": 212,
+          "name": "Scherox",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 213,
+          "name": "Pottrott",
+          "kind": "home"
+        },
+        {
+          "dex": 214,
+          "name": "Skaraborn",
+          "kind": "home"
+        },
+        {
+          "dex": 215,
+          "name": "Sniebel",
+          "kind": "home"
+        },
+        {
+          "dex": 461,
+          "name": "Snibunna",
+          "kind": "home"
+        },
+        {
+          "dex": 903,
+          "name": "Snieboss",
+          "kind": "home"
+        },
+        {
+          "dex": 216,
+          "name": "Teddiursa",
+          "kind": "home"
+        },
+        {
+          "dex": 217,
+          "name": "Ursaring",
+          "kind": "home"
+        },
+        {
+          "dex": 901,
+          "name": "Ursaluna",
+          "kind": "home"
+        },
+        {
+          "dex": 218,
+          "name": "Schneckmag",
+          "kind": "home"
+        },
+        {
+          "dex": 219,
+          "name": "Magcargo",
+          "kind": "home"
+        },
+        {
+          "dex": 220,
+          "name": "Quiekel",
+          "kind": "home"
+        },
+        {
+          "dex": 221,
+          "name": "Keifel",
+          "kind": "home"
+        },
+        {
+          "dex": 473,
+          "name": "Mamutel",
+          "kind": "home"
+        },
+        {
+          "dex": 222,
+          "name": "Corasonn",
+          "kind": "home"
+        },
+        {
+          "dex": 864,
+          "name": "Gorgasonn",
+          "kind": "home"
+        },
+        {
+          "dex": 223,
+          "name": "Remoraid",
+          "kind": "home"
+        },
+        {
+          "dex": 224,
+          "name": "Octillery",
+          "kind": "home"
+        },
+        {
+          "dex": 225,
+          "name": "Botogel",
+          "kind": "home"
+        },
+        {
+          "dex": 458,
+          "name": "Mantirps",
+          "kind": "home"
+        },
+        {
+          "dex": 226,
+          "name": "Mantax",
+          "kind": "home"
+        },
+        {
+          "dex": 227,
+          "name": "Panzaeron",
+          "kind": "home"
+        },
+        {
+          "dex": 228,
+          "name": "Hunduster",
+          "kind": "home"
+        },
+        {
+          "dex": 229,
+          "name": "Hundemon",
+          "kind": "home"
+        },
+        {
+          "dex": 230,
+          "name": "Seedraking",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 231,
+          "name": "Phanpy",
+          "kind": "home"
+        },
+        {
+          "dex": 232,
+          "name": "Donphan",
+          "kind": "home"
+        },
+        {
+          "dex": 233,
+          "name": "Porygon2",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 234,
+          "name": "Damhirplex",
+          "kind": "home"
+        },
+        {
+          "dex": 899,
+          "name": "Damythir",
+          "kind": "home"
+        },
+        {
+          "dex": 235,
+          "name": "Farbeagle",
+          "kind": "home"
+        },
+        {
+          "dex": 236,
+          "name": "Rabauz",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 237,
+          "name": "Kapoera",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 238,
+          "name": "Kussilla",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 239,
+          "name": "Elekid",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 240,
+          "name": "Magby",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 241,
+          "name": "Miltank",
+          "kind": "home"
+        },
+        {
+          "dex": 242,
+          "name": "Heiteira",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 243,
+          "name": "Raikou",
+          "kind": "home"
+        },
+        {
+          "dex": 244,
+          "name": "Entei",
+          "kind": "home"
+        },
+        {
+          "dex": 245,
+          "name": "Suicune",
+          "kind": "home"
+        },
+        {
+          "dex": 246,
+          "name": "Larvitar",
+          "kind": "home"
+        },
+        {
+          "dex": 247,
+          "name": "Pupitar",
+          "kind": "home"
+        },
+        {
+          "dex": 248,
+          "name": "Despotar",
+          "kind": "home"
+        },
+        {
+          "dex": 249,
+          "name": "Lugia",
+          "kind": "home"
+        },
+        {
+          "dex": 250,
+          "name": "Ho-Oh",
+          "kind": "home"
+        },
+        {
+          "dex": 251,
+          "name": "Celebi",
+          "kind": "home"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Hoenn",
+      "entries": [
+        {
+          "dex": 252,
+          "name": "Geckarbor",
+          "kind": "home"
+        },
+        {
+          "dex": 253,
+          "name": "Reptain",
+          "kind": "home"
+        },
+        {
+          "dex": 254,
+          "name": "Gewaldro",
+          "kind": "home"
+        },
+        {
+          "dex": 255,
+          "name": "Flemmli",
+          "kind": "home"
+        },
+        {
+          "dex": 256,
+          "name": "Jungglut",
+          "kind": "home"
+        },
+        {
+          "dex": 257,
+          "name": "Lohgock",
+          "kind": "home"
+        },
+        {
+          "dex": 258,
+          "name": "Hydropi",
+          "kind": "home"
+        },
+        {
+          "dex": 259,
+          "name": "Moorabbel",
+          "kind": "home"
+        },
+        {
+          "dex": 260,
+          "name": "Sumpex",
+          "kind": "home"
+        },
+        {
+          "dex": 261,
+          "name": "Fiffyen",
+          "kind": "home"
+        },
+        {
+          "dex": 262,
+          "name": "Magnayen",
+          "kind": "home"
+        },
+        {
+          "dex": 263,
+          "name": "Zigzachs",
+          "kind": "home"
+        },
+        {
+          "dex": 264,
+          "name": "Geradaks",
+          "kind": "home"
+        },
+        {
+          "dex": 862,
+          "name": "Barrikadax",
+          "kind": "home"
+        },
+        {
+          "dex": 265,
+          "name": "Waumpel",
+          "kind": "home"
+        },
+        {
+          "dex": 266,
+          "name": "Schaloko",
+          "kind": "home"
+        },
+        {
+          "dex": 267,
+          "name": "Papinella",
+          "kind": "home"
+        },
+        {
+          "dex": 268,
+          "name": "Panekon",
+          "kind": "home"
+        },
+        {
+          "dex": 269,
+          "name": "Pudox",
+          "kind": "home"
+        },
+        {
+          "dex": 270,
+          "name": "Loturzel",
+          "kind": "home"
+        },
+        {
+          "dex": 271,
+          "name": "Lombrero",
+          "kind": "home"
+        },
+        {
+          "dex": 272,
+          "name": "Kappalores",
+          "kind": "home"
+        },
+        {
+          "dex": 273,
+          "name": "Samurzel",
+          "kind": "home"
+        },
+        {
+          "dex": 274,
+          "name": "Blanas",
+          "kind": "home"
+        },
+        {
+          "dex": 275,
+          "name": "Tengulist",
+          "kind": "home"
+        },
+        {
+          "dex": 276,
+          "name": "Schwalbini",
+          "kind": "home"
+        },
+        {
+          "dex": 277,
+          "name": "Schwalboss",
+          "kind": "home"
+        },
+        {
+          "dex": 278,
+          "name": "Wingull",
+          "kind": "home"
+        },
+        {
+          "dex": 279,
+          "name": "Pelipper",
+          "kind": "home"
+        },
+        {
+          "dex": 280,
+          "name": "Trasla",
+          "kind": "home"
+        },
+        {
+          "dex": 281,
+          "name": "Kirlia",
+          "kind": "home"
+        },
+        {
+          "dex": 282,
+          "name": "Guardevoir",
+          "kind": "home"
+        },
+        {
+          "dex": 475,
+          "name": "Galagladi",
+          "kind": "home"
+        },
+        {
+          "dex": 283,
+          "name": "Gehweiher",
+          "kind": "home"
+        },
+        {
+          "dex": 284,
+          "name": "Maskeregen",
+          "kind": "home"
+        },
+        {
+          "dex": 285,
+          "name": "Knilz",
+          "kind": "home"
+        },
+        {
+          "dex": 286,
+          "name": "Kapilz",
+          "kind": "home"
+        },
+        {
+          "dex": 287,
+          "name": "Bummelz",
+          "kind": "home"
+        },
+        {
+          "dex": 288,
+          "name": "Muntier",
+          "kind": "home"
+        },
+        {
+          "dex": 289,
+          "name": "Letarking",
+          "kind": "home"
+        },
+        {
+          "dex": 290,
+          "name": "Nincada",
+          "kind": "home"
+        },
+        {
+          "dex": 291,
+          "name": "Ninjask",
+          "kind": "home"
+        },
+        {
+          "dex": 292,
+          "name": "Ninjatom",
+          "kind": "home"
+        },
+        {
+          "dex": 293,
+          "name": "Flurmel",
+          "kind": "home"
+        },
+        {
+          "dex": 294,
+          "name": "Krakeelo",
+          "kind": "home"
+        },
+        {
+          "dex": 295,
+          "name": "Krawumms",
+          "kind": "home"
+        },
+        {
+          "dex": 296,
+          "name": "Makuhita",
+          "kind": "home"
+        },
+        {
+          "dex": 297,
+          "name": "Hariyama",
+          "kind": "home"
+        },
+        {
+          "dex": 298,
+          "name": "Azurill",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 299,
+          "name": "Nasgnet",
+          "kind": "home"
+        },
+        {
+          "dex": 476,
+          "name": "Voluminas",
+          "kind": "home"
+        },
+        {
+          "dex": 300,
+          "name": "Eneco",
+          "kind": "home"
+        },
+        {
+          "dex": 301,
+          "name": "Enekoro",
+          "kind": "home"
+        },
+        {
+          "dex": 302,
+          "name": "Zobiris",
+          "kind": "home"
+        },
+        {
+          "dex": 303,
+          "name": "Flunkifer",
+          "kind": "home"
+        },
+        {
+          "dex": 304,
+          "name": "Stollunior",
+          "kind": "home"
+        },
+        {
+          "dex": 305,
+          "name": "Stollrak",
+          "kind": "home"
+        },
+        {
+          "dex": 306,
+          "name": "Stolloss",
+          "kind": "home"
+        },
+        {
+          "dex": 307,
+          "name": "Meditie",
+          "kind": "home"
+        },
+        {
+          "dex": 308,
+          "name": "Meditalis",
+          "kind": "home"
+        },
+        {
+          "dex": 309,
+          "name": "Frizelbliz",
+          "kind": "home"
+        },
+        {
+          "dex": 310,
+          "name": "Voltenso",
+          "kind": "home"
+        },
+        {
+          "dex": 311,
+          "name": "Plusle",
+          "kind": "home"
+        },
+        {
+          "dex": 312,
+          "name": "Minun",
+          "kind": "home"
+        },
+        {
+          "dex": 313,
+          "name": "Volbeat",
+          "kind": "home"
+        },
+        {
+          "dex": 314,
+          "name": "Illumise",
+          "kind": "home"
+        },
+        {
+          "dex": 406,
+          "name": "Knospi",
+          "kind": "home"
+        },
+        {
+          "dex": 315,
+          "name": "Roselia",
+          "kind": "home"
+        },
+        {
+          "dex": 407,
+          "name": "Roserade",
+          "kind": "home"
+        },
+        {
+          "dex": 316,
+          "name": "Schluppuck",
+          "kind": "home"
+        },
+        {
+          "dex": 317,
+          "name": "Schlukwech",
+          "kind": "home"
+        },
+        {
+          "dex": 318,
+          "name": "Kanivanha",
+          "kind": "home"
+        },
+        {
+          "dex": 319,
+          "name": "Tohaido",
+          "kind": "home"
+        },
+        {
+          "dex": 320,
+          "name": "Wailmer",
+          "kind": "home"
+        },
+        {
+          "dex": 321,
+          "name": "Wailord",
+          "kind": "home"
+        },
+        {
+          "dex": 322,
+          "name": "Camaub",
+          "kind": "home"
+        },
+        {
+          "dex": 323,
+          "name": "Camerupt",
+          "kind": "home"
+        },
+        {
+          "dex": 324,
+          "name": "Qurtel",
+          "kind": "home"
+        },
+        {
+          "dex": 325,
+          "name": "Spoink",
+          "kind": "home"
+        },
+        {
+          "dex": 326,
+          "name": "Groink",
+          "kind": "home"
+        },
+        {
+          "dex": 327,
+          "name": "Pandir",
+          "kind": "home"
+        },
+        {
+          "dex": 328,
+          "name": "Knacklion",
+          "kind": "home"
+        },
+        {
+          "dex": 329,
+          "name": "Vibrava",
+          "kind": "home"
+        },
+        {
+          "dex": 330,
+          "name": "Libelldra",
+          "kind": "home"
+        },
+        {
+          "dex": 331,
+          "name": "Tuska",
+          "kind": "home"
+        },
+        {
+          "dex": 332,
+          "name": "Noktuska",
+          "kind": "home"
+        },
+        {
+          "dex": 333,
+          "name": "Wablu",
+          "kind": "home"
+        },
+        {
+          "dex": 334,
+          "name": "Altaria",
+          "kind": "home"
+        },
+        {
+          "dex": 335,
+          "name": "Sengo",
+          "kind": "home"
+        },
+        {
+          "dex": 336,
+          "name": "Vipitis",
+          "kind": "home"
+        },
+        {
+          "dex": 337,
+          "name": "Lunastein",
+          "kind": "home"
+        },
+        {
+          "dex": 338,
+          "name": "Sonnfel",
+          "kind": "home"
+        },
+        {
+          "dex": 339,
+          "name": "Schmerbe",
+          "kind": "home"
+        },
+        {
+          "dex": 340,
+          "name": "Welsar",
+          "kind": "home"
+        },
+        {
+          "dex": 341,
+          "name": "Krebscorps",
+          "kind": "home"
+        },
+        {
+          "dex": 342,
+          "name": "Krebutack",
+          "kind": "home"
+        },
+        {
+          "dex": 343,
+          "name": "Puppance",
+          "kind": "home"
+        },
+        {
+          "dex": 344,
+          "name": "Lepumentas",
+          "kind": "home"
+        },
+        {
+          "dex": 345,
+          "name": "Liliep",
+          "kind": "home"
+        },
+        {
+          "dex": 346,
+          "name": "Wielie",
+          "kind": "home"
+        },
+        {
+          "dex": 347,
+          "name": "Anorith",
+          "kind": "home"
+        },
+        {
+          "dex": 348,
+          "name": "Armaldo",
+          "kind": "home"
+        },
+        {
+          "dex": 349,
+          "name": "Barschwa",
+          "kind": "home"
+        },
+        {
+          "dex": 350,
+          "name": "Milotic",
+          "kind": "home"
+        },
+        {
+          "dex": 351,
+          "name": "Formeo",
+          "kind": "home"
+        },
+        {
+          "dex": 352,
+          "name": "Kecleon",
+          "kind": "home"
+        },
+        {
+          "dex": 353,
+          "name": "Shuppet",
+          "kind": "home"
+        },
+        {
+          "dex": 354,
+          "name": "Banette",
+          "kind": "home"
+        },
+        {
+          "dex": 355,
+          "name": "Zwirrlicht",
+          "kind": "home"
+        },
+        {
+          "dex": 356,
+          "name": "Zwirrklop",
+          "kind": "home"
+        },
+        {
+          "dex": 477,
+          "name": "Zwirrfinst",
+          "kind": "home"
+        },
+        {
+          "dex": 357,
+          "name": "Tropius",
+          "kind": "home"
+        },
+        {
+          "dex": 433,
+          "name": "Klingplim",
+          "kind": "home"
+        },
+        {
+          "dex": 358,
+          "name": "Palimpalim",
+          "kind": "home"
+        },
+        {
+          "dex": 359,
+          "name": "Absol",
+          "kind": "home"
+        },
+        {
+          "dex": 360,
+          "name": "Isso",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 361,
+          "name": "Schneppke",
+          "kind": "home"
+        },
+        {
+          "dex": 362,
+          "name": "Firnontor",
+          "kind": "home"
+        },
+        {
+          "dex": 478,
+          "name": "Frosdedje",
+          "kind": "home"
+        },
+        {
+          "dex": 363,
+          "name": "Seemops",
+          "kind": "home"
+        },
+        {
+          "dex": 364,
+          "name": "Seejong",
+          "kind": "home"
+        },
+        {
+          "dex": 365,
+          "name": "Walraisa",
+          "kind": "home"
+        },
+        {
+          "dex": 366,
+          "name": "Perlu",
+          "kind": "home"
+        },
+        {
+          "dex": 367,
+          "name": "Aalabyss",
+          "kind": "home"
+        },
+        {
+          "dex": 368,
+          "name": "Saganabyss",
+          "kind": "home"
+        },
+        {
+          "dex": 369,
+          "name": "Relicanth",
+          "kind": "home"
+        },
+        {
+          "dex": 370,
+          "name": "Liebiskus",
+          "kind": "home"
+        },
+        {
+          "dex": 371,
+          "name": "Kindwurm",
+          "kind": "home"
+        },
+        {
+          "dex": 372,
+          "name": "Draschel",
+          "kind": "home"
+        },
+        {
+          "dex": 373,
+          "name": "Brutalanda",
+          "kind": "home"
+        },
+        {
+          "dex": 374,
+          "name": "Tanhel",
+          "kind": "home"
+        },
+        {
+          "dex": 375,
+          "name": "Metang",
+          "kind": "home"
+        },
+        {
+          "dex": 376,
+          "name": "Metagross",
+          "kind": "home"
+        },
+        {
+          "dex": 377,
+          "name": "Regirock",
+          "kind": "home"
+        },
+        {
+          "dex": 378,
+          "name": "Regice",
+          "kind": "home"
+        },
+        {
+          "dex": 379,
+          "name": "Registeel",
+          "kind": "home"
+        },
+        {
+          "dex": 380,
+          "name": "Latias",
+          "kind": "home"
+        },
+        {
+          "dex": 381,
+          "name": "Latios",
+          "kind": "home"
+        },
+        {
+          "dex": 382,
+          "name": "Kyogre",
+          "kind": "home"
+        },
+        {
+          "dex": 383,
+          "name": "Groudon",
+          "kind": "home"
+        },
+        {
+          "dex": 384,
+          "name": "Rayquaza",
+          "kind": "home"
+        },
+        {
+          "dex": 385,
+          "name": "Jirachi",
+          "kind": "home"
+        },
+        {
+          "dex": 386,
+          "name": "Deoxys",
+          "kind": "home"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Sinnoh",
+      "entries": [
+        {
+          "dex": 387,
+          "name": "Chelast",
+          "kind": "home"
+        },
+        {
+          "dex": 388,
+          "name": "Chelcarain",
+          "kind": "home"
+        },
+        {
+          "dex": 389,
+          "name": "Chelterrar",
+          "kind": "home"
+        },
+        {
+          "dex": 390,
+          "name": "Panflam",
+          "kind": "home"
+        },
+        {
+          "dex": 391,
+          "name": "Panpyro",
+          "kind": "home"
+        },
+        {
+          "dex": 392,
+          "name": "Panferno",
+          "kind": "home"
+        },
+        {
+          "dex": 393,
+          "name": "Plinfa",
+          "kind": "home"
+        },
+        {
+          "dex": 394,
+          "name": "Pliprin",
+          "kind": "home"
+        },
+        {
+          "dex": 395,
+          "name": "Impoleon",
+          "kind": "home"
+        },
+        {
+          "dex": 396,
+          "name": "Staralili",
+          "kind": "home"
+        },
+        {
+          "dex": 397,
+          "name": "Staravia",
+          "kind": "home"
+        },
+        {
+          "dex": 398,
+          "name": "Staraptor",
+          "kind": "home"
+        },
+        {
+          "dex": 399,
+          "name": "Bidiza",
+          "kind": "home"
+        },
+        {
+          "dex": 400,
+          "name": "Bidifas",
+          "kind": "home"
+        },
+        {
+          "dex": 401,
+          "name": "Zirpurze",
+          "kind": "home"
+        },
+        {
+          "dex": 402,
+          "name": "Zirpeise",
+          "kind": "home"
+        },
+        {
+          "dex": 403,
+          "name": "Sheinux",
+          "kind": "home"
+        },
+        {
+          "dex": 404,
+          "name": "Luxio",
+          "kind": "home"
+        },
+        {
+          "dex": 405,
+          "name": "Luxtra",
+          "kind": "home"
+        },
+        {
+          "dex": 406,
+          "name": "Knospi",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 407,
+          "name": "Roserade",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 408,
+          "name": "Koknodon",
+          "kind": "home"
+        },
+        {
+          "dex": 409,
+          "name": "Rameidon",
+          "kind": "home"
+        },
+        {
+          "dex": 410,
+          "name": "Schilterus",
+          "kind": "home"
+        },
+        {
+          "dex": 411,
+          "name": "Bollterus",
+          "kind": "home"
+        },
+        {
+          "dex": 412,
+          "name": "Burmy",
+          "kind": "home"
+        },
+        {
+          "dex": 413,
+          "name": "Burmadame",
+          "kind": "home"
+        },
+        {
+          "dex": 414,
+          "name": "Moterpel",
+          "kind": "home"
+        },
+        {
+          "dex": 415,
+          "name": "Wadribie",
+          "kind": "home"
+        },
+        {
+          "dex": 416,
+          "name": "Honweisel",
+          "kind": "home"
+        },
+        {
+          "dex": 417,
+          "name": "Pachirisu",
+          "kind": "home"
+        },
+        {
+          "dex": 418,
+          "name": "Bamelin",
+          "kind": "home"
+        },
+        {
+          "dex": 419,
+          "name": "Bojelin",
+          "kind": "home"
+        },
+        {
+          "dex": 420,
+          "name": "Kikugi",
+          "kind": "home"
+        },
+        {
+          "dex": 421,
+          "name": "Kinoso",
+          "kind": "home"
+        },
+        {
+          "dex": 422,
+          "name": "Schalellos",
+          "kind": "home"
+        },
+        {
+          "dex": 423,
+          "name": "Gastrodon",
+          "kind": "home"
+        },
+        {
+          "dex": 424,
+          "name": "Ambidiffel",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 425,
+          "name": "Driftlon",
+          "kind": "home"
+        },
+        {
+          "dex": 426,
+          "name": "Drifzepeli",
+          "kind": "home"
+        },
+        {
+          "dex": 427,
+          "name": "Haspiror",
+          "kind": "home"
+        },
+        {
+          "dex": 428,
+          "name": "Schlapor",
+          "kind": "home"
+        },
+        {
+          "dex": 429,
+          "name": "Traunmagil",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 430,
+          "name": "Kramshef",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 431,
+          "name": "Charmian",
+          "kind": "home"
+        },
+        {
+          "dex": 432,
+          "name": "Shnurgarst",
+          "kind": "home"
+        },
+        {
+          "dex": 433,
+          "name": "Klingplim",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 434,
+          "name": "Skunkapuh",
+          "kind": "home"
+        },
+        {
+          "dex": 435,
+          "name": "Skuntank",
+          "kind": "home"
+        },
+        {
+          "dex": 436,
+          "name": "Bronzel",
+          "kind": "home"
+        },
+        {
+          "dex": 437,
+          "name": "Bronzong",
+          "kind": "home"
+        },
+        {
+          "dex": 438,
+          "name": "Mobai",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 439,
+          "name": "Pantimimi",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 440,
+          "name": "Wonneira",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 441,
+          "name": "Plaudagei",
+          "kind": "home"
+        },
+        {
+          "dex": 442,
+          "name": "Kryppuk",
+          "kind": "home"
+        },
+        {
+          "dex": 443,
+          "name": "Kaumalat",
+          "kind": "home"
+        },
+        {
+          "dex": 444,
+          "name": "Knarksel",
+          "kind": "home"
+        },
+        {
+          "dex": 445,
+          "name": "Knakrack",
+          "kind": "home"
+        },
+        {
+          "dex": 446,
+          "name": "Mampfaxo",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 447,
+          "name": "Riolu",
+          "kind": "home"
+        },
+        {
+          "dex": 448,
+          "name": "Lucario",
+          "kind": "home"
+        },
+        {
+          "dex": 449,
+          "name": "Hippopotas",
+          "kind": "home"
+        },
+        {
+          "dex": 450,
+          "name": "Hippoterus",
+          "kind": "home"
+        },
+        {
+          "dex": 451,
+          "name": "Pionskora",
+          "kind": "home"
+        },
+        {
+          "dex": 452,
+          "name": "Piondragi",
+          "kind": "home"
+        },
+        {
+          "dex": 453,
+          "name": "Glibunkel",
+          "kind": "home"
+        },
+        {
+          "dex": 454,
+          "name": "Toxiquak",
+          "kind": "home"
+        },
+        {
+          "dex": 455,
+          "name": "Venuflibis",
+          "kind": "home"
+        },
+        {
+          "dex": 456,
+          "name": "Finneon",
+          "kind": "home"
+        },
+        {
+          "dex": 457,
+          "name": "Lumineon",
+          "kind": "home"
+        },
+        {
+          "dex": 458,
+          "name": "Mantirps",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 459,
+          "name": "Shnebedeck",
+          "kind": "home"
+        },
+        {
+          "dex": 460,
+          "name": "Rexblisar",
+          "kind": "home"
+        },
+        {
+          "dex": 461,
+          "name": "Snibunna",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 462,
+          "name": "Magnezone",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 463,
+          "name": "Schlurplek",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 464,
+          "name": "Rihornior",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 465,
+          "name": "Tangoloss",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 466,
+          "name": "Elevoltek",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 467,
+          "name": "Magbrant",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 468,
+          "name": "Togekiss",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 469,
+          "name": "Yanmega",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 470,
+          "name": "Folipurba",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 471,
+          "name": "Glaziola",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 472,
+          "name": "Skorgro",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 473,
+          "name": "Mamutel",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 474,
+          "name": "Porygon-Z",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 475,
+          "name": "Galagladi",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 476,
+          "name": "Voluminas",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 477,
+          "name": "Zwirrfinst",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 478,
+          "name": "Frosdedje",
+          "kind": "placeholder"
+        },
+        {
+          "dex": 479,
+          "name": "Rotom",
+          "kind": "home"
+        },
+        {
+          "dex": 480,
+          "name": "Selfe",
+          "kind": "home"
+        },
+        {
+          "dex": 481,
+          "name": "Vesprit",
+          "kind": "home"
+        },
+        {
+          "dex": 482,
+          "name": "Tobutz",
+          "kind": "home"
+        },
+        {
+          "dex": 483,
+          "name": "Dialga",
+          "kind": "home"
+        },
+        {
+          "dex": 484,
+          "name": "Palkia",
+          "kind": "home"
+        },
+        {
+          "dex": 485,
+          "name": "Heatran",
+          "kind": "home"
+        },
+        {
+          "dex": 486,
+          "name": "Regigigas",
+          "kind": "home"
+        },
+        {
+          "dex": 487,
+          "name": "Giratina",
+          "kind": "home"
+        },
+        {
+          "dex": 488,
+          "name": "Cresselia",
+          "kind": "home"
+        },
+        {
+          "dex": 489,
+          "name": "Phione",
+          "kind": "home"
+        },
+        {
+          "dex": 490,
+          "name": "Manaphy",
+          "kind": "home"
+        },
+        {
+          "dex": 491,
+          "name": "Darkrai",
+          "kind": "home"
+        },
+        {
+          "dex": 492,
+          "name": "Shaymin",
+          "kind": "home"
+        },
+        {
+          "dex": 493,
+          "name": "Arceus",
+          "kind": "home"
+        }
+      ]
+    }
+  ],
+  "cards": []
+}

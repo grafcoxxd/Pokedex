@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f3">
+  <title>Meine Pokémon-Binder</title>
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">◉</span><span>MEINE SAMMLUNG <small>Pokémon-Binder</small></span></div>
+    <span class="prototype">LOKALE TESTVERSION</span>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">DEINE SAMMLUNG, IMMER IM BLICK</p><h1>Ein Zuhause für<br><em>jedes Pokémon.</em></h1><p class="lead">Durchsuche deine Binder und finde jede Karte – mit ihrem genauen Platz.</p></div>
+      <div class="intro-art" aria-hidden="true"><div class="art-circle"></div><div class="binder-art"><div class="binder-art-title">POKÉMON<br><strong>COLLECTION</strong></div><div class="art-ball">●</div><div class="binder-art-footer">FAMILIEN-DEX &nbsp; / &nbsp; 001</div></div><span class="art-star">✦</span></div>
+    </section>
+    <section class="workspace" aria-label="Sammlung">
+      <div class="section-title"><div><p class="eyebrow">SAMMLUNG ENTDECKEN</p><h2>Deine Binder <span>↗</span></h2></div><div class="section-actions"><p>40 Seiten · 9 Fächer pro Seite</p><button id="add-general" class="primary" type="button">+ Karte hinzufügen</button></div></div>
+      <div id="binder-tabs" class="binder-tabs" aria-label="Binder auswählen"></div>
+      <div class="controls">
+        <div><p class="eyebrow" id="binder-label">BINDER</p><h2 id="binder-heading">Sammlung</h2><p id="binder-summary" class="muted"></p></div>
+        <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Name oder Dex-Nr. suchen" aria-label="Pokémon nach Name oder Dex-Nummer suchen"><kbd>⌕</kbd></label>
+      </div>
+      <div id="capacity" class="capacity"></div>
+      <div class="list-heading"><span id="results-label">BINDERÜBERSICHT</span><span id="result-count"></span></div>
+      <div id="results" class="results"></div>
+      <div id="pagination" class="pagination" hidden>
+        <button id="previous" class="secondary" type="button">← Zurück</button>
+        <span id="page-label"></span>
+        <button id="next" class="secondary" type="button">Weiter →</button>
+      </div>
+    </section>
+  </main>
+  <footer>POKÉMON-BINDER <span>Deine Sammlung. Deine Ordnung.</span></footer>
+  <dialog id="detail">
+    <div class="dialog-top"><span class="eyebrow">POKÉMON-DETAILS</span><button id="close" class="close" aria-label="Schließen" type="button">×</button></div>
+    <div id="detail-content"></div>
+  </dialog>
+  <dialog id="general-add">
+    <div class="dialog-top"><span class="eyebrow">ALLGEMEINE KARTENSUCHE</span><button id="close-general" class="close" aria-label="Schließen" type="button">×</button></div>
+    <h2 class="general-title">Karte hinzufügen</h2>
+    <p class="form-note">Suche eine Karte im Set. Das Pokémon und sein Binderplatz werden nach Möglichkeit automatisch zugeordnet.</p>
+    <div id="general-search" class="image-search"></div>
+  </dialog>
+  <dialog id="card-confirm" class="card-confirm" aria-labelledby="confirm-title">
+    <div class="dialog-top">
+      <span class="eyebrow">SAMMLUNG VERWALTEN</span>
+      <button id="confirm-close" class="close" type="button" aria-label="Abbrechen">×</button>
+    </div>
+    <h2 id="confirm-title" class="confirm-title"></h2>
+    <p class="confirm-intro" id="confirm-intro"></p>
+    <div class="confirm-card">
+      <span class="confirm-label">AUSGEWÄHLTE KARTE</span>
+      <strong id="confirm-card-name"></strong>
+      <span id="confirm-card-set"></span>
+    </div>
+    <div class="confirm-target">
+      <span class="confirm-label">POKÉMON</span>
+      <strong id="confirm-pokemon"></strong>
+      <span class="confirm-label">HEIMAT-BINDER</span>
+      <strong id="confirm-binder"></strong>
+    </div>
+    <div id="confirm-warnings" class="confirm-warnings" role="note" hidden></div>
+    <form method="dialog" class="confirm-actions">
+      <button class="secondary" value="cancel" autofocus>Abbrechen</button>
+      <button id="confirm-accept" class="primary" value="accept"></button>
+    </form>
+  </dialog>
+  <div id="message" role="status" aria-live="polite"></div>
+</body>
+</html>
