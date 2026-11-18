@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { addCard, BINDER_CAPACITY, linkCard, loadDatabase, positions, removeCard, saveDatabase } from './binder.js';
+import { addCard, BINDER_CAPACITY, linkCard, loadDatabase, positions, removeCard, saveDatabase, setHolo } from './binder.js';
 import { getCard } from './tcgdex.js';
 import { getChineseCard } from './ptcg.js';
 import { searchCatalog } from './catalog-search.js';
@@ -13,6 +13,9 @@ const assets = new Map([
   ['/', ['../public/index.html', 'text/html; charset=utf-8']],
   ['/app.js', ['../public/app.js', 'text/javascript; charset=utf-8']],
   ['/style.css', ['../public/style.css', 'text/css; charset=utf-8']],
+  ['/qr.html', ['../public/qr.html', 'text/html; charset=utf-8']],
+  ['/qr.js', ['../public/qr.js', 'text/javascript; charset=utf-8']],
+  ['/vendor/qrcode.mjs', ['../public/vendor/qrcode.mjs', 'text/javascript; charset=utf-8']],
   ['/fonts/PressStart2P-Regular.ttf', ['../public/fonts/PressStart2P-Regular.ttf', 'font/ttf']],
   ['/region-maps/kanto.png', ['../public/region-maps/kanto.png', 'image/png']],
   ['/region-maps/johto.png', ['../public/region-maps/johto.png', 'image/png']],
@@ -155,7 +158,9 @@ const server = createServer(async (req, res) => {
         const card = await catalogCard(url.searchParams.get('id'), url.searchParams.get('language'), url.searchParams.get('provider'));
         if (url.searchParams.get('resolvePokemon') === '1') {
           try {
-            const resolution = await resolvePokemon(card);
+            const names = (await loadDatabase(databasePath)).binders
+              .flatMap((binder) => binder.entries.filter((entry) => entry.kind === 'home'));
+            const resolution = await resolvePokemon(card, fetch, names);
             respond(res, 200, { card, resolution });
           } catch (error) {
             respond(res, 200, { card, resolution: { dexIds: [], source: null, error: error.message } });
@@ -193,6 +198,7 @@ const server = createServer(async (req, res) => {
         try {
           const card = await mutate((data) => {
             const added = addCard(data, input.dex, input.set === undefined ? found.set : input.set, input.number);
+            if (input.holo === true) setHolo(data, added.id, true);
             return linkCard(data, added.id, found, input.cardLanguage);
           });
           respond(res, 201, { card });
@@ -235,6 +241,25 @@ const server = createServer(async (req, res) => {
       }
       try {
         const card = await mutate((data) => linkCard(data, cardMatch[1], found, input.cardLanguage));
+        respond(res, 200, { card });
+      } catch (error) {
+        if (error.code) throw error;
+        respond(res, 400, { error: error.message });
+      }
+      return;
+    }
+    if (req.method === 'PATCH' && cardMatch) {
+      if (!isSameOrigin(req)) {
+        respond(res, 403, { error: 'Fremde Herkunft ist nicht erlaubt.' });
+        return;
+      }
+      if (!req.headers['content-type']?.startsWith('application/json')) {
+        respond(res, 415, { error: 'JSON erforderlich.' });
+        return;
+      }
+      const input = await body(req);
+      try {
+        const card = await mutate((data) => setHolo(data, cardMatch[1], input?.holo));
         respond(res, 200, { card });
       } catch (error) {
         if (error.code) throw error;

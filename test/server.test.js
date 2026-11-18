@@ -28,7 +28,7 @@ test('Webserver liefert und speichert gleichzeitige Änderungen zuverlässig', a
       });
     });
     const url = `http://127.0.0.1:${port}`;
-    assert.match(await (await fetch(url)).text(), /Deine Binder/);
+    assert.match(await (await fetch(url)).text(), /Pokédex<\/small>/);
     for (const region of ['kanto', 'johto', 'hoenn', 'sinnoh']) {
       const response = await fetch(`${url}/region-maps/${region}.png`);
       assert.equal(response.status, 200);

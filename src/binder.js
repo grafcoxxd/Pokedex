@@ -68,6 +68,7 @@ export function validate(data) {
     if (card.cardLanguage !== undefined && !['de', 'en', 'ja', 'ko', 'zh-tw', 'zh-cn'].includes(card.cardLanguage)) {
       throw new Error('Ungültige Kartensprache.');
     }
+    if (card.holo !== undefined && typeof card.holo !== 'boolean') throw new Error('Ungültige Glanz-Angabe.');
     ids.add(card.id);
   }
   return data;
@@ -178,6 +179,16 @@ export function addCard(data, dex, set, number, cardLanguage) {
   const card = { id: randomUUID(), dex, set: set.trim(), number: number.trim() };
   if (cardLanguage !== undefined) card.cardLanguage = cardLanguage;
   data.cards.push(card);
+  return card;
+}
+
+export function setHolo(data, id, holo) {
+  validate(data);
+  if (typeof holo !== 'boolean') throw new Error('Ungültige Glanz-Angabe.');
+  const card = data.cards.find((item) => item.id === id);
+  if (!card) throw new Error(`Karte ${id} nicht gefunden.`);
+  if (holo) card.holo = true;
+  else delete card.holo;
   return card;
 }
 

@@ -10,21 +10,15 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><span class="brand-mark" aria-hidden="true">◉</span><span>MEINE SAMMLUNG <small>Pokémon-Binder</small></span></div>
-    <span class="prototype">LOKALE TESTVERSION</span>
+    <div class="brand"><button type="button" id="home" class="brand-mark" aria-label="Zurück zur Binderübersicht">◉</button><span>NICK'S PRIVATE <small>Pokédex</small></span></div>
   </header>
   <main>
     <div id="collection-view">
-      <section class="intro">
-        <div><p class="eyebrow">DEINE SAMMLUNG, IMMER IM BLICK</p><h1>Ein Zuhause für<br><em>jedes Pokémon.</em></h1><p class="lead">Durchsuche deine Binder und finde jede Karte – mit ihrem genauen Platz.</p></div>
-        <div class="intro-art" aria-hidden="true"><div class="art-circle"></div><div class="binder-art"><div class="binder-art-title">POKÉMON<br><strong>COLLECTION</strong></div><div class="art-ball">●</div><div class="binder-art-footer">FAMILIEN-DEX &nbsp; / &nbsp; 001</div></div><span class="art-star">✦</span></div>
-      </section>
       <section class="workspace" aria-label="Sammlung">
-        <div class="section-title"><div><p class="eyebrow">SAMMLUNG ENTDECKEN</p><h2>Deine Binder <span>↗</span></h2></div><div class="section-actions"><p>40 Seiten · 9 Fächer pro Seite</p><button id="add-general" class="primary" type="button">+ Karte hinzufügen</button></div></div>
         <div id="binder-tabs" class="binder-tabs" aria-label="Binder auswählen"></div>
         <div class="controls">
           <div><p class="eyebrow" id="binder-label">BINDER</p><h2 id="binder-heading">Sammlung</h2><p id="binder-summary" class="muted"></p></div>
-          <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Name oder Dex-Nr. suchen" aria-label="Pokémon nach Name oder Dex-Nummer suchen"><kbd>⌕</kbd></label>
+          <div class="search-row"><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Name oder Nr." aria-label="Pokémon nach Name oder Dex-Nummer suchen"><kbd>⌕</kbd></label><button id="add-general" class="primary" type="button">+ Karte hinzufügen</button></div>
         </div>
         <div id="capacity" class="capacity"></div>
         <div class="list-heading"><span id="results-label">BINDERÜBERSICHT</span><span id="result-count"></span></div>
@@ -37,11 +31,10 @@
       </section>
     </div>
     <section id="detail" class="detail-page" aria-label="Pokémon-Details" hidden>
-      <button id="close" class="detail-back" type="button">← Zurück</button>
       <div id="detail-content"></div>
     </section>
   </main>
-  <footer>POKÉMON-BINDER <span>Deine Sammlung. Deine Ordnung.</span></footer>
+  <footer>POKÉMON-BINDER <span>Deine Sammlung. Deine Ordnung.</span> <a href="/qr.html" class="qr-link">QR-Codes</a></footer>
   <dialog id="general-add">
     <div class="dialog-top"><span class="eyebrow">ALLGEMEINE KARTENSUCHE</span><button id="close-general" class="close" aria-label="Schließen" type="button">×</button></div>
     <h2 class="general-title">Karte hinzufügen</h2>
@@ -66,6 +59,7 @@
       <span class="confirm-label">HEIMAT-BINDER</span>
       <strong id="confirm-binder"></strong>
     </div>
+    <label id="confirm-holo-label" class="confirm-holo"><input type="checkbox" id="confirm-holo"> ✦ Glänzende Karte (Holo / Reverse Holo)</label>
     <div id="confirm-warnings" class="confirm-warnings" role="note" hidden></div>
     <form method="dialog" class="confirm-actions">
       <button class="secondary" value="cancel" autofocus>Abbrechen</button>

@@ -1,6 +1,20 @@
-export async function resolvePokemon(card, fetcher = fetch) {
+function normalize(value) {
+  return value.toLocaleLowerCase('de').normalize('NFD').replace(/\p{Diacritic}/gu, '');
+}
+
+// Fallback für Karten ohne Dex-Angabe im Katalog: deutsche Pokémon-Namen im Kartennamen suchen.
+function resolveByName(card, names) {
+  if (card.language !== 'de' || typeof card.name !== 'string' || !Array.isArray(names)) return [];
+  const byName = new Map(names.map((item) => [normalize(item.name), item.dex]));
+  const tokens = normalize(card.name).split(/[^\p{L}\d]+/u).filter(Boolean);
+  return [...new Set(tokens.filter((token) => byName.has(token)).map((token) => byName.get(token)))];
+}
+
+export async function resolvePokemon(card, fetcher = fetch, names = []) {
   const dexIds = [...new Set(card.dexIds)];
   if (dexIds.length) return { dexIds, source: 'catalog' };
+  const named = resolveByName(card, names);
+  if (named.length) return { dexIds: named, source: 'name' };
   if (card.provider !== 'ptcg' || typeof card.englishName !== 'string' ||
       !/^[A-Za-z]+$/.test(card.englishName)) return { dexIds: [], source: null };
   let response;

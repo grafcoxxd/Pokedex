@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QR-Codes – Pokédex</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; color: #23362f; background: #f7f8f5; }
+    main { max-width: 960px; margin: 0 auto; padding: 16px; }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    .tools { display: grid; gap: 12px; margin: 16px 0; padding: 14px; background: #fff; border: 1px solid #d9dfd6; border-radius: 8px; }
+    label { display: grid; gap: 4px; font-size: 14px; font-weight: 700; }
+    input, select, button { font: inherit; padding: 9px 10px; border: 1px solid #b9c4b8; border-radius: 6px; background: #fff; }
+    button { cursor: pointer; background: #3f6b58; color: #fff; border-color: #3f6b58; font-weight: 700; }
+    .warning { color: #9b3d1f; font-size: 14px; margin: 0; }
+    .note { font-size: 14px; color: #5b6b62; margin: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 10px; }
+    .tag { display: grid; justify-items: center; gap: 4px; padding: 8px 4px; background: #fff; border: 1px solid #d9dfd6; border-radius: 6px; break-inside: avoid; text-align: center; }
+    .tag svg { width: 96px; height: 96px; }
+    .tag strong { font-size: 12px; }
+    .tag span { font-size: 11px; color: #5b6b62; }
+    @media print {
+      body { background: #fff; }
+      .tools, h1, .note-top { display: none; }
+      main { padding: 0; max-width: none; }
+      .grid { grid-template-columns: repeat(5, 1fr); gap: 0; }
+      .tag { border: 1px dashed #999; border-radius: 0; padding: 4mm 1mm; }
+      .tag svg { width: 24mm; height: 24mm; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>QR-Codes für Pokémon</h1>
+    <p class="note note-top">Ein Code pro Pokémon zum Aufkleben auf den Sleeve der ersten Karte. Beim Scannen öffnet sich die Infoseite.</p>
+    <div class="tools">
+      <label>Adresse der App (so erreichbar, wie dein Handy sie öffnet)
+        <input id="base" type="url" inputmode="url" placeholder="https://meine-app.example">
+      </label>
+      <p id="warning" class="warning" hidden>Diese Adresse funktioniert nur auf diesem Gerät. Für Scans mit dem Handy muss die App unter einer vom Handy erreichbaren Adresse laufen (z. B. dem Heimnetz oder einem Webserver); trage sie hier ein.</p>
+      <label>Binder
+        <select id="binder"><option value="all">Alle Binder</option></select>
+      </label>
+      <button id="print" type="button">Drucken</button>
+      <p id="count" class="note"></p>
+    </div>
+    <div id="grid" class="grid"></div>
+  </main>
+  <script type="module" src="/qr.js"></script>
+</body>
+</html>

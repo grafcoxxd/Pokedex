@@ -11,6 +11,15 @@ test('National-Dex-Angaben aus dem Katalog werden dedupliziert übernommen', asy
     { dexIds: [281, 282], source: 'catalog' });
 });
 
+test('Deutsche Karten ohne Dex-Angabe werden über den Pokémon-Namen erkannt', async () => {
+  const names = [{ dex: 133, name: 'Evoli' }, { dex: 6, name: 'Glurak' }, { dex: 25, name: 'Pikachu' }];
+  const base = { dexIds: [], provider: 'tcgdex', language: 'de' };
+  assert.deepEqual(await resolvePokemon({ ...base, name: 'Evoli' }, fetch, names), { dexIds: [133], source: 'name' });
+  assert.deepEqual(await resolvePokemon({ ...base, name: 'Mega-Glurak-ex' }, fetch, names), { dexIds: [6], source: 'name' });
+  assert.deepEqual(await resolvePokemon({ ...base, name: 'Pikachu & Evoli' }, fetch, names), { dexIds: [25, 133], source: 'name' });
+  assert.deepEqual(await resolvePokemon({ ...base, name: 'Hyperball' }, fetch, names), { dexIds: [], source: null });
+});
+
 test('Englischer PTCG-Pokémonname wird exakt mit PokéAPI abgeglichen', async () => {
   const card = { dexIds: [], provider: 'ptcg', englishName: 'Infernape' };
   const fetcher = async (url) => {

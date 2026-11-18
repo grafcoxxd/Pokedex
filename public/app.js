@@ -111,7 +111,7 @@ function render() {
   if (!binder) return;
   const occupied = binder.entries.reduce((sum, entry) => sum + entry.slots.length, 0);
   const cardCount = countCards(binder);
-  $('#binder-label').textContent = `BINDER 0${binder.id} / ${binder.name.toLocaleUpperCase('de')}`;
+  $('#binder-label').textContent = `REGION 0${binder.id} / ${binder.name.toLocaleUpperCase('de')}`;
   $('#binder-heading').textContent = `${binder.name}-Binder`;
   $('#binder-summary').textContent = `${cardCount} ${cardCount === 1 ? 'Karte' : 'Karten'} · ${binder.entries.length} Pokémon & Platzhalter`;
   const cap = $('#capacity');
@@ -148,11 +148,19 @@ function render() {
     const info = node('span', 'result-info');
     info.append(node('strong', '', entry.name), node('small', '', `#${String(entry.dex).padStart(3, '0')}${entry.kind === 'placeholder' ? ' · Platzhalter' : ''}`));
     const loc = node('span', 'result-location');
-    loc.append(node('strong', '', `${entryBinder.name} · ${formatSlot(entry.slots[0])}`));
+    const place = node('strong', 'slot-place');
+    if (query) place.append(node('span', 'slot-binder', entryBinder.name.toUpperCase()));
+    place.append(node('span', 'slot-position', `${entry.slots[0].page} / ${entry.slots[0].slot}`));
+    loc.append(place);
     const count = entry.slots.filter((slot) => slot.card).length;
-    loc.append(node('small', '', entry.kind === 'placeholder'
-      ? `Standort: ${target.binder.name} · ${formatSlot(target.entry.slots[0])}`
-      : `${count} ${count === 1 ? 'Karte' : 'Karten'}`));
+    const holoCount = entry.slots.filter((slot) => slot.card?.holo).length;
+    const small = node('small', '', entry.kind === 'placeholder' ? '' : `${count} ${count === 1 ? 'Karte' : 'Karten'}${holoCount ? ` · ✦${holoCount}` : ''}`);
+    if (entry.kind === 'placeholder') {
+      const homeSlot = target.entry.slots[0];
+      small.append(node('span', '', target.binder.name.toUpperCase()), node('span', '', `${homeSlot.page} / ${homeSlot.slot}`));
+      icon.append(node('span', 'binder-initial', target.binder.name[0].toUpperCase()));
+    }
+    loc.append(small);
     row.append(icon, info, loc, node('span', 'row-arrow', '›'));
     results.append(row);
   }
@@ -237,9 +245,11 @@ function confirmCard(found, target, targetDex, linking, warnings) {
   warningContainer.replaceChildren(...warnings.filter(Boolean).map((warning) => node('p', '', warning)));
   warningContainer.hidden = !warningContainer.childElementCount;
   $('#confirm-accept').textContent = linking ? 'Verknüpfen' : 'Karte hinzufügen';
+  $('#confirm-holo-label').hidden = linking;
+  $('#confirm-holo').checked = false;
   dialog.returnValue = '';
   return new Promise((resolve) => {
-    dialog.addEventListener('close', () => resolve(dialog.returnValue === 'accept'), { once: true });
+    dialog.addEventListener('close', () => resolve(dialog.returnValue === 'accept' && { holo: $('#confirm-holo').checked }), { once: true });
     dialog.showModal();
   });
 }
@@ -302,7 +312,8 @@ function imageSearch(card, dex, container) {
               const mismatch = !general && found.dexIds.length
                 ? (found.dexIds.includes(targetDex) ? '' : `Achtung: Die Quelle nennt Dex-Nr. ${found.dexIds.join(', ')}, nicht #${targetDex}.`)
                 : (!general ? 'Für diese Karte meldet die Quelle keine überprüfte Dex-Nummer. Bitte prüfe die Zuordnung selbst.' : '');
-              if (!await confirmCard(found, target, targetDex, Boolean(card), [mismatch, unverified, comparison])) {
+              const confirmed = await confirmCard(found, target, targetDex, Boolean(card), [mismatch, unverified, comparison]);
+              if (!confirmed) {
                 choose.disabled = false;
                 return;
               }
@@ -315,7 +326,7 @@ function imageSearch(card, dex, container) {
               } else {
                 ({ card: added } = await request('/api/cards', {
                   method: 'POST', headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ dex: targetDex, number: values.number, cardLanguage: values.language,
+                  body: JSON.stringify({ dex: targetDex, number: values.number, cardLanguage: values.language, holo: confirmed.holo,
                     ...(candidate.comparison ? { set: values.set } : {}),
                     catalog: { id: found.id, language: found.language, provider: candidate.provider } }),
                 }));
@@ -573,7 +584,7 @@ function renderPokedex(container, data, currentDex) {
   if (known) {
     detail.style.setProperty('--pokemon-background', background);
     detail.classList.add('has-type-colors');
-    const lightTypes = ['normal', 'psychic', 'flying'];
+    const lightTypes = ['normal', 'psychic', 'flying', 'electric', 'dragon', 'ice'];
     detail.classList.toggle('has-light-type', data.types.some((type) => lightTypes.includes(type.id)));
     detail.classList.toggle('has-light-only', data.types.every((type) => lightTypes.includes(type.id)));
   }
@@ -625,9 +636,9 @@ function showDetail(dex, openSearch, fromHistory = false) {
   dexNumber.append(node('span', 'detail-dex-label', `#${String(dex).padStart(3, '0')}`));
   dexNumber.setAttribute('aria-label', `National-Dex Nummer ${dex}`);
   heading.append(title, dexNumber);
-  content.append(heading, node('p', 'detail-location', `⌖  ${binder.name} · ${formatSlot(entry.slots[0])}`));
+  content.append(heading, node('p', 'detail-location', `⌖  ${binder.name.toUpperCase()} · ${formatSlot(entry.slots[0])}`));
   const references = binders.flatMap((b) => b.entries.filter((e) => e.dex === dex && e.kind === 'placeholder')
-    .map((e) => `${b.name}: ${formatSlot(e.slots[0])}`));
+    .map((e) => `${b.name.toUpperCase()}: ${formatSlot(e.slots[0])}`));
   if (references.length) content.append(node('p', 'reference', `Platzhalter: ${references.join(' · ')}`));
   const pokedex = node('section', 'pokedex');
   pokedex.setAttribute('aria-label', `Pokédex-Eintrag ${entry.name}`);
@@ -649,6 +660,7 @@ function showDetail(dex, openSearch, fromHistory = false) {
     }
     const info = node('div');
     info.append(node('strong', '', `${slot.card.set} · ${slot.card.number}`), node('small', '', formatSlot(slot)));
+    if (slot.card.holo) info.append(node('small', 'holo-badge', '✦ Glänzend'));
     if (catalog) info.append(node('small', '', `${slot.card.ptcg ? 'PTCG-card-data' : 'TCGdex'}: ${catalog.name} (${catalog.language.toUpperCase()})`));
     if (slot.card.cardLanguage) info.append(node('small', 'form-note',
       `Kartensprache: ${slot.card.cardLanguage.toUpperCase()}${catalog && catalog.language !== slot.card.cardLanguage ? ' · Katalogeintrag ist eine Vergleichskarte, keine bestätigte Originalausgabe.' : ''}`));
@@ -661,7 +673,16 @@ function showDetail(dex, openSearch, fromHistory = false) {
       }
       imageSearch(slot.card, dex, searchContainer);
     });
-    actions.append(find, button('Entfernen', 'remove', async () => {
+    actions.append(find, button(slot.card.holo ? 'Glanz entfernen' : '✦ Als glänzend markieren', 'image-link', async () => {
+      try {
+        await request(`/api/cards/${encodeURIComponent(slot.card.id)}`, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ holo: !slot.card.holo }),
+        });
+        await refresh();
+        if (currentDetail === dex) showDetail(dex);
+      } catch (error) { notify(error.message, true); }
+    }), button('Entfernen', 'remove', async () => {
       if (!confirm(`Karte ${slot.card.set} ${slot.card.number} entfernen?`)) return;
       try {
         await request(`/api/cards/${encodeURIComponent(slot.card.id)}`, { method: 'DELETE' });
@@ -703,7 +724,11 @@ function showCollection() {
 $('#search').addEventListener('input', () => { page = 1; render(); });
 $('#previous').addEventListener('click', () => { page--; render(); });
 $('#next').addEventListener('click', () => { page++; render(); });
-$('#close').addEventListener('click', () => history.back());
+$('#home').addEventListener('click', () => {
+  if (currentDetail === null) return;
+  if (history.state?.pokemonDex) history.back();
+  else showCollection();
+});
 window.addEventListener('popstate', (event) => {
   if (event.state?.pokemonDex && home(event.state.pokemonDex)) showDetail(event.state.pokemonDex, undefined, true);
   else showCollection();
@@ -721,7 +746,11 @@ $('#card-confirm').addEventListener('keydown', (event) => {
   }
 });
 refresh().then(() => {
-  if (history.state?.pokemonDex && home(history.state.pokemonDex)) {
+  const linked = Number(new URLSearchParams(location.search).get('pokemon'));
+  if (Number.isInteger(linked) && home(linked)) {
+    history.replaceState(null, '', location.pathname);
+    showDetail(linked, undefined, true);
+  } else if (history.state?.pokemonDex && home(history.state.pokemonDex)) {
     showDetail(history.state.pokemonDex, undefined, true);
   }
 }).catch((error) => {
