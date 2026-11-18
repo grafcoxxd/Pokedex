@@ -49,6 +49,11 @@ function home(dex) {
   }
 }
 
+function owned(dex) {
+  const target = home(dex);
+  return Boolean(target) && target.entry.slots.some((slot) => slot.card);
+}
+
 function formatSlot(slot) {
   return `Seite ${slot.page} · Fach ${slot.slot}`;
 }
@@ -61,8 +66,8 @@ function normalize(value) {
   return value.toLocaleLowerCase('de').normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }
 
-function pokemonSprite(dex, placeholder) {
-  const icon = node('span', `result-icon${placeholder ? ' placeholder-icon' : ''}`);
+function pokemonSprite(dex, placeholder, hidden) {
+  const icon = node('span', `result-icon${placeholder ? ' placeholder-icon' : ''}${hidden ? ' silhouette' : ''}`);
   const image = node('img');
   const base = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
   const fallback = `${base}/${dex}.png`;
@@ -141,7 +146,7 @@ function render() {
   for (const { binder: entryBinder, entry } of filtered.slice((page - 1) * pageSize, page * pageSize)) {
     const target = home(entry.dex);
     const row = button('', 'result', () => showDetail(entry.dex));
-    const icon = pokemonSprite(entry.dex, entry.kind === 'placeholder');
+    const icon = pokemonSprite(entry.dex, entry.kind === 'placeholder', !owned(entry.dex));
     const info = node('span', 'result-info');
     info.append(node('strong', '', entry.name), node('small', '', `#${String(entry.dex).padStart(3, '0')}${entry.kind === 'placeholder' ? ' · Platzhalter' : ''}`));
     const loc = node('span', 'result-location');
@@ -455,11 +460,11 @@ function cryControl(url, name) {
   return container;
 }
 
-function pokemonArtwork(dex, name, className) {
-  const picture = node('div', className);
+function pokemonArtwork(dex, name, className, hidden) {
+  const picture = node('div', hidden ? `${className} silhouette` : className);
   const image = node('img');
   image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${dex}.png`;
-  image.alt = `Illustration von ${name}`;
+  image.alt = hidden ? 'Unbekanntes Pokémon' : `Illustration von ${name}`;
   image.loading = 'lazy';
   image.addEventListener('error', () => picture.replaceChildren(node('span', 'pokedex-image-error', 'Bild nicht verfügbar')));
   picture.append(image);
@@ -486,23 +491,25 @@ function renderPokedex(container, data, currentDex) {
   });
   const layout = node('div', 'pokedex-layout');
   const name = home(currentDex).entry.name;
-  const artwork = pokemonArtwork(currentDex, name, 'pokedex-art');
+  const known = owned(currentDex);
+  const unknown = '???';
+  const artwork = pokemonArtwork(currentDex, name, 'pokedex-art', !known);
   const stats = node('section', 'pokedex-stats');
   stats.append(node('h4', '', 'Artenspezifische Stärken'));
   const chart = node('div', 'stats-chart');
   for (const [id, [label, fullLabel]] of Object.entries(statLabels)) {
     const stat = data.stats.find((item) => item.id === id);
     const column = node('div', 'stat-column');
-    column.setAttribute('aria-label', `${fullLabel}: ${stat ? stat.value : 'nicht verfügbar'}`);
+    column.setAttribute('aria-label', `${fullLabel}: ${!known ? 'unbekannt' : stat ? stat.value : 'nicht verfügbar'}`);
     const track = node('div', 'stat-track');
-    if (stat) {
+    if (known && stat) {
       const bar = node('div', 'stat-bar');
       bar.style.height = `${Math.min(100, stat.value / 255 * 100)}%`;
       track.append(bar);
     }
     const abbreviation = node('span', '', label);
     abbreviation.title = fullLabel;
-    column.append(node('strong', '', stat ? String(stat.value) : '–'), track, abbreviation);
+    column.append(node('strong', '', !known ? unknown : stat ? String(stat.value) : '–'), track, abbreviation);
     chart.append(column);
   }
   stats.append(chart, node('small', 'pokedex-muted', 'Basiswerte · Skala bis 255'));
@@ -510,9 +517,9 @@ function renderPokedex(container, data, currentDex) {
   const right = node('div', 'pokedex-info');
   const description = node('div', 'pokedex-entry');
   description.append(node('span', 'pokedex-entry-label', 'Pokédex-Eintrag'),
-    node('p', 'pokedex-description', data.description || 'Kein deutscher Pokédex-Text verfügbar.'));
+    node('p', 'pokedex-description', !known ? unknown : data.description || 'Kein deutscher Pokédex-Text verfügbar.'));
   right.append(description);
-  right.append(cryControl(data.cry, name));
+  if (known) right.append(cryControl(data.cry, name));
   const facts = node('div', 'pokedex-facts');
   const fact = (label, value) => {
     const field = node('div');
@@ -520,14 +527,19 @@ function renderPokedex(container, data, currentDex) {
     facts.append(field);
   };
   const decimal = (number) => (number / 10).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  fact('Größe', `${decimal(data.height)} m`);
-  fact('Kategorie', data.category || 'Nicht verfügbar');
-  fact('Gewicht', `${decimal(data.weight)} kg`);
-  fact('Fähigkeiten', data.abilities.length
+  fact('Größe', known ? `${decimal(data.height)} m` : unknown);
+  fact('Kategorie', known ? data.category || 'Nicht verfügbar' : unknown);
+  fact('Gewicht', known ? `${decimal(data.weight)} kg` : unknown);
+  fact('Fähigkeiten', !known ? unknown : data.abilities.length
     ? data.abilities.map((ability) => `${ability.name}${ability.hidden ? ' (versteckt)' : ''}`).join(', ')
     : 'Nicht verfügbar');
-  right.append(facts, node('h4', 'pokedex-subheading', 'Typ'), typeBadges(data.types),
-    node('h4', 'pokedex-subheading', 'Schwächen'), typeBadges(data.weaknesses, true));
+  const hiddenBadges = () => {
+    const group = node('div', 'pokedex-badges');
+    group.append(node('span', 'type-badge', unknown));
+    return group;
+  };
+  right.append(facts, node('h4', 'pokedex-subheading', 'Typ'), known ? typeBadges(data.types) : hiddenBadges(),
+    node('h4', 'pokedex-subheading', 'Schwächen'), known ? typeBadges(data.weaknesses, true) : hiddenBadges());
   layout.append(artwork, right, stats);
 
   const evolution = node('section', 'pokedex-evolution');
@@ -536,13 +548,15 @@ function renderPokedex(container, data, currentDex) {
   function branch(item) {
     const wrapper = node('div', 'evolution-branch');
     const target = home(item.id);
+    const itemKnown = owned(item.id);
     const body = target ? button('', 'evolution-card', () => showDetail(item.id))
       : node('div', 'evolution-card');
     if (item.id === currentDex) body.classList.add('current');
-    if (target) body.setAttribute('aria-label', `${item.name}, National-Dex ${item.id}, Details öffnen`);
-    body.append(pokemonArtwork(item.id, item.name, 'evolution-art'),
-      node('strong', '', item.name), node('small', '', `Nr. ${String(item.id).padStart(4, '0')}`),
-      typeBadges(item.types));
+    if (target) body.setAttribute('aria-label', itemKnown ? `${item.name}, National-Dex ${item.id}, Details öffnen` : 'Unbekanntes Pokémon, Details öffnen');
+    body.append(pokemonArtwork(item.id, item.name, 'evolution-art', !itemKnown),
+      node('strong', '', itemKnown ? item.name : unknown),
+      node('small', '', itemKnown ? `Nr. ${String(item.id).padStart(4, '0')}` : 'Nr. ???'),
+      itemKnown ? typeBadges(item.types) : hiddenBadges());
     wrapper.append(body);
     const children = data.evolutions.filter((entry) => entry.parent === item.id);
     if (children.length) {
@@ -558,11 +572,13 @@ function renderPokedex(container, data, currentDex) {
     ? `linear-gradient(${colors[0]}, ${colors[0]})`
     : `linear-gradient(135deg, ${colors[0]} 50%, ${colors[1]} 50%)`;
   const detail = container.closest('.detail-page');
-  detail.style.setProperty('--pokemon-background', background);
-  detail.classList.add('has-type-colors');
-  const lightTypes = ['normal', 'psychic', 'flying'];
-  detail.classList.toggle('has-light-type', data.types.some((type) => lightTypes.includes(type.id)));
-  detail.classList.toggle('has-light-only', data.types.every((type) => lightTypes.includes(type.id)));
+  if (known) {
+    detail.style.setProperty('--pokemon-background', background);
+    detail.classList.add('has-type-colors');
+    const lightTypes = ['normal', 'psychic', 'flying'];
+    detail.classList.toggle('has-light-type', data.types.some((type) => lightTypes.includes(type.id)));
+    detail.classList.toggle('has-light-only', data.types.every((type) => lightTypes.includes(type.id)));
+  }
   container.replaceChildren(layout, evolution, node('p', 'pokedex-source', 'Daten: PokéAPI · Standardform'));
 }
 
