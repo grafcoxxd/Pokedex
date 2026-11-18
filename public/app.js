@@ -103,10 +103,8 @@ function render() {
     tab.dataset.binderId = binder.id;
     tab.setAttribute('aria-pressed', String(binder.id === selected));
     tab.setAttribute('aria-label', `${binder.name}-Binder, ${cards} ${cards === 1 ? 'Karte' : 'Karten'}`);
-    const emblem = node('span', 'tab-emblem');
-    emblem.setAttribute('aria-hidden', 'true');
     tab.append(node('span', 'tab-number', `REGION / ${String(binder.id).padStart(2, '0')}`),
-      node('strong', '', binder.name), emblem, node('span', 'tab-meta', `KARTEN / ${String(cards).padStart(3, '0')}`));
+      node('strong', '', binder.name), node('span', 'tab-meta', `KARTEN / ${String(cards).padStart(3, '0')}`));
     tabs.append(tab);
   });
   const binder = binders.find((item) => item.id === selected);
