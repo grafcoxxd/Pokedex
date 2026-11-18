@@ -49,6 +49,10 @@ $env:PORT = "3001"
 npm start
 ```
 
+### Speicherort der Sammlung
+
+Ohne weitere Einstellung liegt die Sammlung in `collection.json`. Ist die Umgebungsvariable `DATABASE_URL` gesetzt (z. B. die Connection String eines Neon-Postgres), speichert der Server die Sammlung stattdessen in der Tabelle `collection` (wird automatisch angelegt). Ist die Tabelle noch leer, wird sie einmalig aus der lokalen `collection.json` befüllt, sonst aus den Startdaten. Die Variable enthält ein Passwort und gehört nicht ins Repository.
+
 ### Alternative: Kommandozeile
 
 ```powershell

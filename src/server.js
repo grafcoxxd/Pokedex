@@ -1,7 +1,8 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { addCard, BINDER_CAPACITY, linkCard, loadDatabase, positions, removeCard, saveDatabase, setHolo } from './binder.js';
+import { addCard, BINDER_CAPACITY, linkCard, positions, removeCard, setHolo } from './binder.js';
+import { createStore } from './storage.js';
 import { getCard } from './tcgdex.js';
 import { getChineseCard } from './ptcg.js';
 import { searchCatalog } from './catalog-search.js';
@@ -33,14 +34,8 @@ async function catalogCard(id, language, provider) {
   throw new Error('Ungültige Katalogquelle oder Kartensprache.');
 }
 
-async function initialize() {
-  try {
-    await loadDatabase(databasePath);
-  } catch (error) {
-    if (error.code !== 'ENOENT') throw error;
-    await saveDatabase(databasePath, await loadDatabase(seedPath), { create: true });
-  }
-}
+const store = await createStore(databasePath);
+await store.initialize(seedPath, databasePath);
 
 function respond(res, status, value) {
   res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
@@ -69,9 +64,9 @@ async function body(req) {
 let mutations = Promise.resolve();
 function mutate(action) {
   const result = mutations.then(async () => {
-    const data = await loadDatabase(databasePath);
+    const data = await store.load();
     const result = action(data);
-    await saveDatabase(databasePath, data);
+    await store.save(data);
     return result;
   });
   mutations = result.catch(() => {});
@@ -109,7 +104,7 @@ const server = createServer(async (req, res) => {
     }
     if (req.method === 'GET' && url.pathname === '/api/binders') {
       await mutations;
-      const data = await loadDatabase(databasePath);
+      const data = await store.load();
       respond(res, 200, { binders: positions(data), capacity: BINDER_CAPACITY });
       return;
     }
@@ -117,7 +112,7 @@ const server = createServer(async (req, res) => {
     if (req.method === 'GET' && pokedexMatch) {
       try {
         const dex = Number(pokedexMatch[1]);
-        const data = await loadDatabase(databasePath);
+        const data = await store.load();
         if (!data.binders.some((binder) => binder.entries.some((entry) => entry.kind === 'home' && entry.dex === dex))) {
           respond(res, 404, { error: 'Pokémon ist nicht in den vorhandenen Bindern enthalten.' });
           return;
@@ -158,7 +153,7 @@ const server = createServer(async (req, res) => {
         const card = await catalogCard(url.searchParams.get('id'), url.searchParams.get('language'), url.searchParams.get('provider'));
         if (url.searchParams.get('resolvePokemon') === '1') {
           try {
-            const names = (await loadDatabase(databasePath)).binders
+            const names = (await store.load()).binders
               .flatMap((binder) => binder.entries.filter((entry) => entry.kind === 'home'));
             const resolution = await resolvePokemon(card, fetch, names);
             respond(res, 200, { card, resolution });
@@ -293,7 +288,6 @@ const server = createServer(async (req, res) => {
   }
 });
 
-await initialize();
 const host = process.env.HOST || (process.env.RENDER ? '0.0.0.0' : '127.0.0.1');
 server.listen(port, host, () => {
   console.log(`Pokémon-Binder läuft auf http://${host}:${server.address().port}`);
