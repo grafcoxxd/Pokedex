@@ -70,6 +70,12 @@ function mutate(action) {
   return result;
 }
 
+function isSameOrigin(req) {
+  const origin = req.headers.origin;
+  if (!origin) return true;
+  return origin === `http://${req.headers.host}` || origin === `https://${req.headers.host}`;
+}
+
 const server = createServer(async (req, res) => {
   try {
     if (!/^(localhost|127\.0\.0\.1)(:\d+)?$/i.test(req.headers.host || '')) {
@@ -149,8 +155,7 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (req.method === 'POST' && url.pathname === '/api/cards') {
-      const origin = req.headers.origin;
-      if (origin && origin !== `http://${req.headers.host}`) {
+      if (!isSameOrigin(req)) {
         respond(res, 403, { error: 'Fremde Herkunft ist nicht erlaubt.' });
         return;
       }
@@ -194,8 +199,7 @@ const server = createServer(async (req, res) => {
     }
     const cardMatch = url.pathname.match(/^\/api\/cards\/([a-f0-9-]+)$/i);
     if (req.method === 'PUT' && cardMatch) {
-      const origin = req.headers.origin;
-      if (origin && origin !== `http://${req.headers.host}`) {
+      if (!isSameOrigin(req)) {
         respond(res, 403, { error: 'Fremde Herkunft ist nicht erlaubt.' });
         return;
       }
@@ -225,8 +229,7 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (req.method === 'DELETE' && cardMatch) {
-      const origin = req.headers.origin;
-      if (origin && origin !== `http://${req.headers.host}`) {
+      if (!isSameOrigin(req)) {
         respond(res, 403, { error: 'Fremde Herkunft ist nicht erlaubt.' });
         return;
       }
