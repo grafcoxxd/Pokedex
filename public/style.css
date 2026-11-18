@@ -43,7 +43,7 @@ h1 em { color: #719985; font-weight: 400; }
 .binder-tab[data-binder-id="3"] { --binder-map: url("/region-maps/hoenn.png"); }
 .binder-tab[data-binder-id="4"] { --binder-map: url("/region-maps/sinnoh.png"); }
 .binder-tab:hover { transform: translateY(-2px) rotate(3deg); }
-.binder-tab.active { outline: 6px solid var(--region); outline-offset: 4px; }
+.binder-tab.active { outline: 12px solid var(--region); outline-offset: 0; }
 .binder-tab:focus-visible { outline: 3px solid #23362f; outline-offset: 4px; }
 .tab-number, .tab-meta { display: block; font-size: 11px; font-weight: 700; color: #fff; letter-spacing: .11em; }
 .binder-tab strong { display: block; margin: 5px 0 0; font-size: 17px; text-transform: uppercase; }
