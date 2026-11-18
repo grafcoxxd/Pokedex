@@ -303,8 +303,10 @@ function imageSearch(card, dex, container) {
                   results.replaceChildren();
                   numberField.querySelector('input').value = '';
                 }
-                showDetail(targetDex, card ? undefined : container);
-                if (!card) numberField.querySelector('input').focus();
+                if (currentDetail === targetDex) {
+                  showDetail(targetDex, card ? undefined : container);
+                  if (!card) numberField.querySelector('input').focus();
+                }
                 notify(card ? 'Kartenbild-Verknüpfung gespeichert.' : 'Karte hinzugefügt und Bild verknüpft.');
               }
             };
@@ -379,6 +381,9 @@ function imageSearch(card, dex, container) {
 
 const pokedexCache = new Map();
 let activeCry = null;
+let currentDetail = null;
+let collectionScroll = 0;
+let collectionFocus = null;
 const statLabels = {
   hp: ['KP', 'Kraftpunkte'], attack: ['ANG', 'Angriff'], defense: ['VERT', 'Verteidigung'],
   'special-attack': ['SP-A', 'Spezial-Angriff'], 'special-defense': ['SP-V', 'Spezial-Verteidigung'],
@@ -492,10 +497,8 @@ function renderPokedex(container, data, currentDex) {
   function branch(item) {
     const wrapper = node('div', 'evolution-branch');
     const target = home(item.id);
-    const body = target ? button('', 'evolution-card', () => {
-      $('#detail').scrollTop = 0;
-      showDetail(item.id);
-    }) : node('div', 'evolution-card');
+    const body = target ? button('', 'evolution-card', () => showDetail(item.id))
+      : node('div', 'evolution-card');
     if (item.id === currentDex) body.classList.add('current');
     if (target) body.setAttribute('aria-label', `${item.name}, National-Dex ${item.id}, Details öffnen`);
     body.append(pokemonArtwork(item.id, item.name, 'evolution-art'),
@@ -531,15 +534,30 @@ async function loadPokedex(container, dex) {
   }
 }
 
-function showDetail(dex, openSearch) {
+function showDetail(dex, openSearch, fromHistory = false) {
   const target = home(dex);
   if (!target) return;
+  const navigating = currentDetail !== dex;
+  if (currentDetail === null) {
+    collectionScroll = window.scrollY;
+    collectionFocus = document.activeElement;
+  }
+  if (navigating && !fromHistory) {
+    const state = { ...history.state, pokemonDex: dex };
+    if (currentDetail === null) history.pushState(state, '');
+    else history.replaceState(state, '');
+  }
+  currentDetail = dex;
   stopCry();
+  $('#collection-view').hidden = true;
+  $('#detail').hidden = false;
   const { binder, entry } = target;
   const content = $('#detail-content');
   content.replaceChildren();
+  const title = node('h1', 'detail-title', entry.name);
+  title.tabIndex = -1;
   content.append(node('p', 'detail-dex', `NATIONAL-DEX #${String(dex).padStart(3, '0')}`),
-    node('h2', 'detail-title', entry.name),
+    title,
     node('p', 'detail-location', `⌖  ${binder.name} · ${formatSlot(entry.slots[0])}`));
   const references = binders.flatMap((b) => b.entries.filter((e) => e.dex === dex && e.kind === 'placeholder')
     .map((e) => `${b.name}: ${formatSlot(e.slots[0])}`));
@@ -581,7 +599,7 @@ function showDetail(dex, openSearch) {
       try {
         await request(`/api/cards/${encodeURIComponent(slot.card.id)}`, { method: 'DELETE' });
         await refresh();
-        showDetail(dex);
+        if (currentDetail === dex) showDetail(dex);
         notify('Karte entfernt. Die Binderplätze wurden neu berechnet.');
       } catch (error) { notify(error.message, true); }
     }));
@@ -596,14 +614,33 @@ function showDetail(dex, openSearch) {
     if (catalogSearch.childElementCount) catalogSearch.replaceChildren();
     else imageSearch(null, dex, catalogSearch);
   }), catalogSearch);
-  if (!$('#detail').open) $('#detail').showModal();
+  if (navigating) {
+    window.scrollTo(0, 0);
+    title.focus({ preventScroll: true });
+  }
+}
+
+function showCollection() {
+  if (currentDetail === null) return;
+  if ($('#card-confirm').open) $('#card-confirm').close('cancel');
+  stopCry();
+  currentDetail = null;
+  $('#detail').hidden = true;
+  $('#detail-content').replaceChildren();
+  $('#collection-view').hidden = false;
+  window.scrollTo(0, collectionScroll);
+  if (collectionFocus?.isConnected) collectionFocus.focus({ preventScroll: true });
+  else $('#search').focus({ preventScroll: true });
 }
 
 $('#search').addEventListener('input', () => { page = 1; render(); });
 $('#previous').addEventListener('click', () => { page--; render(); });
 $('#next').addEventListener('click', () => { page++; render(); });
-$('#close').addEventListener('click', () => $('#detail').close());
-$('#detail').addEventListener('close', stopCry);
+$('#close').addEventListener('click', () => history.back());
+window.addEventListener('popstate', (event) => {
+  if (event.state?.pokemonDex && home(event.state.pokemonDex)) showDetail(event.state.pokemonDex, undefined, true);
+  else showCollection();
+});
 $('#add-general').addEventListener('click', () => {
   imageSearch(null, null, $('#general-search'));
   $('#general-add').showModal();
@@ -616,7 +653,11 @@ $('#card-confirm').addEventListener('keydown', (event) => {
     $('#card-confirm').close('cancel');
   }
 });
-refresh().catch((error) => {
+refresh().then(() => {
+  if (history.state?.pokemonDex && home(history.state.pokemonDex)) {
+    showDetail(history.state.pokemonDex, undefined, true);
+  }
+}).catch((error) => {
   $('#results').replaceChildren(node('p', 'empty', `Daten konnten nicht geladen werden: ${error.message}`));
   notify(error.message, true);
 });
