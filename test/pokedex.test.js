@@ -63,6 +63,17 @@ test('Fehlende Rufe bleiben verfügbar, ungültige Audio-Verweise werden abgeleh
   await assert.rejects(getPokedex(2, withCry({ latest: 'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/3.ogg' })), /Ruf-Verweis/);
 });
 
+test('Deutsche Kategorien erhalten genau einmal den Zusatz Pokémon', async () => {
+  const withCategory = (genera) => async (address) => address.endsWith('/pokemon-species/2')
+    ? { ok: true, json: async () => ({ ...species(2, 'Bisaknosp'), genera }) }
+    : mock(address);
+  const germanGenus = (genus) => [{ language: { name: 'de' }, genus }];
+  assert.equal((await getPokedex(2, withCategory(germanGenus('Hain')))).category, 'Hain-Pokémon');
+  assert.equal((await getPokedex(2, withCategory(germanGenus('Samen-Pokémon')))).category, 'Samen-Pokémon');
+  assert.equal((await getPokedex(2, withCategory(germanGenus(' Hain Pokémon ')))).category, 'Hain-Pokémon');
+  assert.equal((await getPokedex(2, withCategory([]))).category, null);
+});
+
 test('Ungültige Eingaben und externe Fehler werden gemeldet', async () => {
   await assert.rejects(getPokedex(0, mock), /National-Dex/);
   await assert.rejects(getPokedex(2, async () => { throw new Error('offline'); }), /nicht erreichbar.*offline/);

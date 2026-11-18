@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -29,6 +29,13 @@ test('Webserver liefert und speichert gleichzeitige Änderungen zuverlässig', a
     });
     const url = `http://127.0.0.1:${port}`;
     assert.match(await (await fetch(url)).text(), /Deine Binder/);
+    for (const region of ['kanto', 'johto', 'hoenn', 'sinnoh']) {
+      const response = await fetch(`${url}/region-maps/${region}.png`);
+      assert.equal(response.status, 200);
+      assert.equal(response.headers.get('content-type'), 'image/png');
+      assert.deepEqual(Buffer.from(await response.arrayBuffer()),
+        await readFile(new URL(`../public/region-maps/${region}.png`, import.meta.url)));
+    }
     const initial = await (await fetch(`${url}/api/binders`)).json();
     assert.equal(initial.capacity, 360);
     assert.equal(initial.binders.length, 4);

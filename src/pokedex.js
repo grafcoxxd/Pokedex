@@ -100,6 +100,7 @@ export async function getPokedex(dex, fetcher = fetch) {
       types: evolutionPokemon.types.map((item) => mapType(item.type.name)) };
   }));
   const description = species.flavor_text_entries?.find((item) => item.language?.name === 'de');
+  const category = german(species.genera, 'genus')?.trim();
   const cry = pokemon.cries?.latest ?? null;
   if (cry !== null && cry !== `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${dex}.ogg`) {
     throw new Error('Ungültiger Ruf-Verweis von PokéAPI.');
@@ -108,7 +109,8 @@ export async function getPokedex(dex, fetcher = fetch) {
     dex, description: description ? description.flavor_text.replace(/\s+/g, ' ').trim() : null,
     version: description?.version?.name || null,
     cry,
-    category: german(species.genera, 'genus'), height: pokemon.height, weight: pokemon.weight,
+    category: category ? `${category.replace(/[-\s]+pokémon$/i, '')}-Pokémon` : null,
+    height: pokemon.height, weight: pokemon.weight,
     genderRate: species.gender_rate, types, weaknesses, abilities, stats, evolutions,
   };
 }

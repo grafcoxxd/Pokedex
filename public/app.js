@@ -53,30 +53,61 @@ function formatSlot(slot) {
   return `Seite ${slot.page} · Fach ${slot.slot}`;
 }
 
+function countCards(binder) {
+  return binder.entries.reduce((sum, entry) => sum + entry.slots.filter((slot) => slot.card).length, 0);
+}
+
 function normalize(value) {
   return value.toLocaleLowerCase('de').normalize('NFD').replace(/\p{Diacritic}/gu, '');
+}
+
+function pokemonSprite(dex, placeholder) {
+  const icon = node('span', `result-icon${placeholder ? ' placeholder-icon' : ''}`);
+  const image = node('img');
+  const base = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
+  const fallback = `${base}/${dex}.png`;
+  image.alt = '';
+  image.addEventListener('error', () => {
+    if (image.src !== fallback) {
+      image.src = fallback;
+    } else {
+      const missing = node('span', 'sprite-missing', '?');
+      missing.setAttribute('role', 'img');
+      missing.setAttribute('aria-label', 'Sprite nicht verfügbar');
+      icon.replaceChildren(missing);
+      icon.title = 'Sprite nicht verfügbar';
+    }
+  });
+  image.src = dex <= 493 ? `${base}/versions/generation-iv/heartgold-soulsilver/${dex}.png`
+    : dex <= 649 ? `${base}/versions/generation-v/black-white/${dex}.png` : fallback;
+  icon.append(image);
+  return icon;
 }
 
 function render() {
   const tabs = $('#binder-tabs');
   tabs.replaceChildren();
   binders.forEach((binder, index) => {
-    const occupied = binder.entries.reduce((sum, entry) => sum + entry.slots.length, 0);
+    const cards = countCards(binder);
     const tab = button('', `binder-tab ${binder.id === selected ? 'active' : ''}`, () => {
       selected = binder.id;
       page = 1;
       render();
     });
     tab.style.setProperty('--region', colors[index % colors.length]);
+    tab.dataset.binderId = binder.id;
     tab.setAttribute('aria-pressed', String(binder.id === selected));
-    tab.append(node('span', 'tab-number', `0${binder.id} / REGION`), node('strong', '', binder.name),
-      node('span', 'tab-meta', `${occupied} / ${capacity} Fächer`), node('span', 'tab-arrow', '↗'));
+    tab.setAttribute('aria-label', `${binder.name}-Binder, ${cards} ${cards === 1 ? 'Karte' : 'Karten'}`);
+    const emblem = node('span', 'tab-emblem');
+    emblem.setAttribute('aria-hidden', 'true');
+    tab.append(node('span', 'tab-number', `REGION / ${String(binder.id).padStart(2, '0')}`),
+      node('strong', '', binder.name), emblem, node('span', 'tab-meta', `KARTEN / ${String(cards).padStart(3, '0')}`));
     tabs.append(tab);
   });
   const binder = binders.find((item) => item.id === selected);
   if (!binder) return;
   const occupied = binder.entries.reduce((sum, entry) => sum + entry.slots.length, 0);
-  const cardCount = binder.entries.reduce((sum, entry) => sum + entry.slots.filter((slot) => slot.card).length, 0);
+  const cardCount = countCards(binder);
   $('#binder-label').textContent = `BINDER 0${binder.id} / ${binder.name.toLocaleUpperCase('de')}`;
   $('#binder-heading').textContent = `${binder.name}-Binder`;
   $('#binder-summary').textContent = `${cardCount} ${cardCount === 1 ? 'Karte' : 'Karten'} · ${binder.entries.length} Pokémon & Platzhalter`;
@@ -110,7 +141,7 @@ function render() {
   for (const { binder: entryBinder, entry } of filtered.slice((page - 1) * pageSize, page * pageSize)) {
     const target = home(entry.dex);
     const row = button('', 'result', () => showDetail(entry.dex));
-    const icon = node('span', `result-icon ${entry.kind === 'placeholder' ? 'placeholder-icon' : ''}`, entry.kind === 'placeholder' ? '↗' : '◉');
+    const icon = pokemonSprite(entry.dex, entry.kind === 'placeholder');
     const info = node('span', 'result-info');
     info.append(node('strong', '', entry.name), node('small', '', `#${String(entry.dex).padStart(3, '0')}${entry.kind === 'placeholder' ? ' · Platzhalter' : ''}`));
     const loc = node('span', 'result-location');
@@ -446,10 +477,16 @@ function typeBadges(types, includeMultiplier = false) {
 }
 
 function renderPokedex(container, data, currentDex) {
+  if (data.types.length < 1 || data.types.length > 2) throw new Error('Ungültige Pokémon-Typen.');
+  const styles = getComputedStyle(document.documentElement);
+  const colors = data.types.map((type) => {
+    const color = styles.getPropertyValue(`--type-${type.id}`).trim();
+    if (!color) throw new Error(`Keine Farbe für Pokémon-Typ ${type.name}.`);
+    return color;
+  });
   const layout = node('div', 'pokedex-layout');
-  const left = node('div', 'pokedex-left');
   const name = home(currentDex).entry.name;
-  left.append(pokemonArtwork(currentDex, name, 'pokedex-art'));
+  const artwork = pokemonArtwork(currentDex, name, 'pokedex-art');
   const stats = node('section', 'pokedex-stats');
   stats.append(node('h4', '', 'Artenspezifische Stärken'));
   const chart = node('div', 'stats-chart');
@@ -469,10 +506,12 @@ function renderPokedex(container, data, currentDex) {
     chart.append(column);
   }
   stats.append(chart, node('small', 'pokedex-muted', 'Basiswerte · Skala bis 255'));
-  left.append(stats);
 
   const right = node('div', 'pokedex-info');
-  right.append(node('p', 'pokedex-description', data.description || 'Kein deutscher Pokédex-Text verfügbar.'));
+  const description = node('div', 'pokedex-entry');
+  description.append(node('span', 'pokedex-entry-label', 'Pokédex-Eintrag'),
+    node('p', 'pokedex-description', data.description || 'Kein deutscher Pokédex-Text verfügbar.'));
+  right.append(description);
   right.append(cryControl(data.cry, name));
   const facts = node('div', 'pokedex-facts');
   const fact = (label, value) => {
@@ -489,7 +528,7 @@ function renderPokedex(container, data, currentDex) {
     : 'Nicht verfügbar');
   right.append(facts, node('h4', 'pokedex-subheading', 'Typ'), typeBadges(data.types),
     node('h4', 'pokedex-subheading', 'Schwächen'), typeBadges(data.weaknesses, true));
-  layout.append(left, right);
+  layout.append(artwork, right, stats);
 
   const evolution = node('section', 'pokedex-evolution');
   evolution.append(node('h4', '', 'Entwicklungen'));
@@ -515,6 +554,15 @@ function renderPokedex(container, data, currentDex) {
   }
   for (const root of data.evolutions.filter((item) => item.parent === null)) list.append(branch(root));
   evolution.append(list);
+  const background = colors.length === 1
+    ? `linear-gradient(${colors[0]}, ${colors[0]})`
+    : `linear-gradient(135deg, ${colors[0]} 50%, ${colors[1]} 50%)`;
+  const detail = container.closest('.detail-page');
+  detail.style.setProperty('--pokemon-background', background);
+  detail.classList.add('has-type-colors');
+  const lightTypes = ['normal', 'psychic', 'flying'];
+  detail.classList.toggle('has-light-type', data.types.some((type) => lightTypes.includes(type.id)));
+  detail.classList.toggle('has-light-only', data.types.every((type) => lightTypes.includes(type.id)));
   container.replaceChildren(layout, evolution, node('p', 'pokedex-source', 'Daten: PokéAPI · Standardform'));
 }
 
@@ -551,14 +599,19 @@ function showDetail(dex, openSearch, fromHistory = false) {
   stopCry();
   $('#collection-view').hidden = true;
   $('#detail').hidden = false;
+  $('#detail').classList.remove('has-type-colors', 'has-light-type', 'has-light-only');
+  $('#detail').style.removeProperty('--pokemon-background');
   const { binder, entry } = target;
   const content = $('#detail-content');
   content.replaceChildren();
   const title = node('h1', 'detail-title', entry.name);
   title.tabIndex = -1;
-  content.append(node('p', 'detail-dex', `NATIONAL-DEX #${String(dex).padStart(3, '0')}`),
-    title,
-    node('p', 'detail-location', `⌖  ${binder.name} · ${formatSlot(entry.slots[0])}`));
+  const heading = node('div', 'detail-heading');
+  const dexNumber = node('span', 'detail-dex');
+  dexNumber.append(node('span', 'detail-dex-label', `#${String(dex).padStart(3, '0')}`));
+  dexNumber.setAttribute('aria-label', `National-Dex Nummer ${dex}`);
+  heading.append(title, dexNumber);
+  content.append(heading, node('p', 'detail-location', `⌖  ${binder.name} · ${formatSlot(entry.slots[0])}`));
   const references = binders.flatMap((b) => b.entries.filter((e) => e.dex === dex && e.kind === 'placeholder')
     .map((e) => `${b.name}: ${formatSlot(e.slots[0])}`));
   if (references.length) content.append(node('p', 'reference', `Platzhalter: ${references.join(' · ')}`));
