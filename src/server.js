@@ -252,6 +252,7 @@ const server = createServer(async (req, res) => {
 });
 
 await initialize();
-server.listen(port, '127.0.0.1', () => {
-  console.log(`Pokémon-Binder läuft auf http://127.0.0.1:${server.address().port}`);
+const host = process.env.HOST || (process.env.RENDER ? '0.0.0.0' : '127.0.0.1');
+server.listen(port, host, () => {
+  console.log(`Pokémon-Binder läuft auf http://${host}:${server.address().port}`);
 });
