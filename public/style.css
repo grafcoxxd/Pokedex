@@ -1,8 +1,8 @@
 :root {
   color-scheme: light; font-family: system-ui, sans-serif; font-size: 17px; color: #23362f; background: #f7f8f5; font-synthesis: none;
   --type-normal: #dcd0d1; --type-fighting: #a44130; --type-flying: #a0b0d1; --type-poison: #9850a3;
-  --type-ground: #956b34; --type-rock: #8c782a; --type-bug: #778824; --type-ghost: #68548f;
-  --type-steel: #697989; --type-fire: #bd5d21; --type-water: #3b78ad; --type-grass: #568b36;
+  --type-ground: #6b5a43; --type-rock: #9a6a2c; --type-bug: #85901f; --type-ghost: #68548f;
+  --type-steel: #697989; --type-fire: #bd5d21; --type-water: #3b78ad; --type-grass: #7cab5d;
   --type-electric: #846b08; --type-psychic: #e487af; --type-ice: #357f87; --type-dragon: #5946a0;
   --type-dark: #6b534b; --type-fairy: #a74b78;
 }
@@ -43,7 +43,7 @@ h1 em { color: #719985; font-weight: 400; }
 .binder-tab[data-binder-id="3"] { --binder-map: url("/region-maps/hoenn.png"); }
 .binder-tab[data-binder-id="4"] { --binder-map: url("/region-maps/sinnoh.png"); }
 .binder-tab:hover { transform: translateY(-2px) rotate(3deg); }
-.binder-tab.active { outline: 2px solid var(--region); outline-offset: 3px; }
+.binder-tab.active { outline: 6px solid var(--region); outline-offset: 4px; }
 .binder-tab:focus-visible { outline: 3px solid #23362f; outline-offset: 4px; }
 .tab-number, .tab-meta { display: block; font-size: 11px; font-weight: 700; color: #fff; letter-spacing: .11em; }
 .binder-tab strong { display: block; margin: 5px 0 0; font-size: 17px; text-transform: uppercase; }
