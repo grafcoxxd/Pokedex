@@ -13,6 +13,7 @@ const assets = new Map([
   ['/', ['../public/index.html', 'text/html; charset=utf-8']],
   ['/app.js', ['../public/app.js', 'text/javascript; charset=utf-8']],
   ['/style.css', ['../public/style.css', 'text/css; charset=utf-8']],
+  ['/fonts/PressStart2P-Regular.ttf', ['../public/fonts/PressStart2P-Regular.ttf', 'font/ttf']],
   ['/region-maps/kanto.png', ['../public/region-maps/kanto.png', 'image/png']],
   ['/region-maps/johto.png', ['../public/region-maps/johto.png', 'image/png']],
   ['/region-maps/hoenn.png', ['../public/region-maps/hoenn.png', 'image/png']],
