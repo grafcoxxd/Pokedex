@@ -76,9 +76,18 @@ function isSameOrigin(req) {
   return origin === `http://${req.headers.host}` || origin === `https://${req.headers.host}`;
 }
 
+const extraHosts = [process.env.RENDER_EXTERNAL_HOSTNAME, ...(process.env.ALLOWED_HOSTS || '').split(',')]
+  .map((h) => h?.trim().toLowerCase())
+  .filter(Boolean);
+
+function isAllowedHost(host) {
+  if (/^(localhost|127\.0\.0\.1)(:\d+)?$/i.test(host)) return true;
+  return extraHosts.includes(host.toLowerCase().replace(/:\d+$/, ''));
+}
+
 const server = createServer(async (req, res) => {
   try {
-    if (!/^(localhost|127\.0\.0\.1)(:\d+)?$/i.test(req.headers.host || '')) {
+    if (!isAllowedHost(req.headers.host || '')) {
       respond(res, 403, { error: 'Ungültiger Host.' });
       return;
     }
