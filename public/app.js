@@ -445,28 +445,22 @@ function stopCry() {
 }
 
 function cryControl(url, name) {
-  const container = node('div', 'pokedex-cry');
-  const status = node('p', 'pokedex-cry-status', url ? '' : 'Ruf nicht verfügbar.');
-  status.setAttribute('role', 'status');
-  if (url) {
-    const play = button('▶ Ruf abspielen', 'cry-button', () => {
-      stopCry();
-      status.textContent = '';
-      const audio = document.createElement('audio');
-      activeCry = audio;
-      audio.preload = 'none';
-      audio.src = url;
-      const showError = () => {
-        if (activeCry === audio) status.textContent = 'Ruf konnte nicht abgespielt werden. Bitte erneut versuchen.';
-      };
-      audio.addEventListener('error', showError);
-      audio.play().catch(showError);
-    });
-    play.setAttribute('aria-label', `Ruf von ${name} abspielen`);
-    container.append(play);
-  }
-  container.append(status);
-  return container;
+  if (!url) return null;
+  const play = button('', 'cry-button', () => {
+    stopCry();
+    const audio = document.createElement('audio');
+    activeCry = audio;
+    audio.preload = 'none';
+    audio.src = url;
+    const showError = () => {
+      if (activeCry === audio) notify('Ruf konnte nicht abgespielt werden. Bitte erneut versuchen.', true);
+    };
+    audio.addEventListener('error', showError);
+    audio.play().catch(showError);
+  });
+  play.innerHTML = '<svg viewBox="0 0 34 34" width="34" height="34" aria-hidden="true"><g transform="translate(-1 0)" fill="#23362f"><path d="M8 13h4l5-4v16l-5-4H8z"/><path d="M20.5 12.5a6 6 0 0 1 0 9M23.5 9.5a10 10 0 0 1 0 15" fill="none" stroke="#23362f" stroke-width="2" stroke-linecap="round"/></g></svg>';
+  play.setAttribute('aria-label', `Ruf von ${name} abspielen`);
+  return play;
 }
 
 function pokemonArtwork(dex, name, className, hidden) {
@@ -503,6 +497,8 @@ function renderPokedex(container, data, currentDex) {
   const known = owned(currentDex);
   const unknown = '???';
   const artwork = pokemonArtwork(currentDex, name, 'pokedex-art', !known);
+  const cry = known ? cryControl(data.cry, name) : null;
+  if (cry) artwork.append(cry);
   const stats = node('section', 'pokedex-stats');
   stats.append(node('h4', '', 'Artenspezifische Stärken'));
   const chart = node('div', 'stats-chart');
@@ -528,7 +524,6 @@ function renderPokedex(container, data, currentDex) {
   description.append(node('span', 'pokedex-entry-label', 'Pokédex-Eintrag'),
     node('p', 'pokedex-description', !known ? unknown : data.description || 'Kein deutscher Pokédex-Text verfügbar.'));
   right.append(description);
-  if (known) right.append(cryControl(data.cry, name));
   const facts = node('div', 'pokedex-facts');
   const fact = (label, value) => {
     const field = node('div');
@@ -663,7 +658,7 @@ function showDetail(dex, openSearch, fromHistory = false) {
     if (slot.card.holo) info.append(node('small', 'holo-badge', '✦ Glänzend'));
     if (catalog) info.append(node('small', '', `${slot.card.ptcg ? 'PTCG-card-data' : 'TCGdex'}: ${catalog.name} (${catalog.language.toUpperCase()})`));
     if (slot.card.cardLanguage) info.append(node('small', 'form-note',
-      `Kartensprache: ${slot.card.cardLanguage.toUpperCase()}${catalog && catalog.language !== slot.card.cardLanguage ? ' · Katalogeintrag ist eine Vergleichskarte, keine bestätigte Originalausgabe.' : ''}`));
+      `Kartensprache: ${slot.card.cardLanguage.toUpperCase()}${catalog && catalog.language !== slot.card.cardLanguage ? ' · Vergleichskarte' : ''}`));
     const actions = node('div', 'card-actions');
     const searchContainer = node('div', 'image-search');
     const find = button(catalog ? 'Katalog ändern' : 'Bild suchen', 'image-link', () => {
@@ -673,16 +668,7 @@ function showDetail(dex, openSearch, fromHistory = false) {
       }
       imageSearch(slot.card, dex, searchContainer);
     });
-    actions.append(find, button(slot.card.holo ? 'Glanz entfernen' : '✦ Als glänzend markieren', 'image-link', async () => {
-      try {
-        await request(`/api/cards/${encodeURIComponent(slot.card.id)}`, {
-          method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ holo: !slot.card.holo }),
-        });
-        await refresh();
-        if (currentDetail === dex) showDetail(dex);
-      } catch (error) { notify(error.message, true); }
-    }), button('Entfernen', 'remove', async () => {
+    actions.append(find, button('Entfernen', 'remove', async () => {
       if (!confirm(`Karte ${slot.card.set} ${slot.card.number} entfernen?`)) return;
       try {
         await request(`/api/cards/${encodeURIComponent(slot.card.id)}`, { method: 'DELETE' });

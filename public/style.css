@@ -306,3 +306,26 @@ button.evolution-card:hover, button.evolution-card:focus-visible { background: #
 .confirm-holo input { width: 18px; height: 18px; }
 .holo-badge { color: #9a6b00; font-weight: 800; }
 .qr-link { display: block; margin-top: 6px; color: inherit; font-size: 12px; }
+
+.pokedex-art { position: relative; }
+.pokedex-art .cry-button { position: absolute; left: 8px; bottom: 8px; width: 34px; height: 34px; min-height: 0; padding: 0; display: grid; place-items: center; border-radius: 50%; font-size: 16px; line-height: 1; font-family: system-ui, sans-serif; }
+.pokedex-art .cry-button { background: transparent; border: 0; }
+.pokedex-art .cry-button svg { display: block; }
+.pokedex-art .cry-button:hover, .pokedex-art .cry-button:focus-visible { background: transparent; opacity: .8; }
+
+.pokedex-art .cry-button { left: 14px; bottom: 14px; width: 28px; height: 28px; }
+.pokedex-art .cry-button svg { width: 28px; height: 28px; }
+
+.pokedex-art .cry-button { width: 31px; height: 31px; }
+.pokedex-art .cry-button svg { width: 31px; height: 31px; }
+
+
+body.bg-normal { background: #b9d8bd url('/backgrounds/normal.jpg') center top / 100% auto no-repeat; }
+body.bg-fire { background: #7a4a2a url('/backgrounds/fire.jpg') center top / 100% auto no-repeat; }
+body.bg-fire .detail-title, body.bg-fire .detail-page > h3, body.bg-fire #detail-content > h3 { color: #fff; text-shadow: 0 2px 6px #000c; }
+body.bg-normal .detail-title, body.bg-normal #detail-content > h3 { text-shadow: 0 1px 4px #ffffffb0; }
+body.bg-fire .pokedex h4 { display: table; color: #23362f; background: #ffffffd9; border-radius: 4px; padding: 2px 5px; }
+body[class*='bg-'] .card-list { background: #f7f8f5e6; border-radius: 7px; padding: 10px 14px; }
+body[class*='bg-'] .pokedex-source { display: table; color: #23362f; background: #ffffffd9; border-radius: 4px; padding: 2px 5px; }
+
+.pokedex-entry { margin-bottom: 12px; }
