@@ -43,13 +43,11 @@ h1 em { color: #719985; font-weight: 400; }
 .binder-tab[data-binder-id="3"] { --binder-map: url("/region-maps/hoenn.png"); }
 .binder-tab[data-binder-id="4"] { --binder-map: url("/region-maps/sinnoh.png"); }
 .binder-tab:hover { transform: translateY(-2px) rotate(3deg); }
-.binder-tab.active { outline: 12px solid var(--region); outline-offset: 0; }
+.binder-tab.active { outline: 9px solid var(--region); outline-offset: 0; }
 .binder-tab:focus-visible { outline: 3px solid #23362f; outline-offset: 4px; }
 .tab-number, .tab-meta { display: block; font-size: 11px; font-weight: 700; color: #fff; letter-spacing: .11em; }
 .binder-tab strong { display: block; margin: 5px 0 0; font-size: 17px; text-transform: uppercase; }
-.tab-emblem { width: 42px; height: 42px; flex: 0 0 42px; align-self: center; display: grid; place-items: center; border: 2px solid #e9f2ea; border-radius: 50%; margin: auto; }
-.tab-emblem::after { content: ''; width: 5px; height: 5px; background: #e9f2ea; border-radius: 50%; }
-.tab-meta { font-size: 11px; letter-spacing: .06em; white-space: nowrap; }
+.tab-meta { margin-top: auto; font-size: 11px; letter-spacing: .06em; white-space: nowrap; }
 .controls { margin-bottom: 22px; }
 .controls h2 { font-size: 27px; }
 .muted { color: #88978d; font-size: 13px; line-height: 1.5; }
