@@ -71,6 +71,7 @@ kbd { color: #b1bdb5; border: 1px solid #e6ece6; padding: 2px 6px; border-radius
 .result:last-child { border-bottom: 0; }
 .result:hover { background: #f6f9f6; }
 .result-icon { flex: 0 0 56px; width: 56px; height: 56px; border-radius: 6px; background: #eff5ef; display: grid; place-items: center; color: #607466; font-size: 19px; }
+.silhouette img { filter: brightness(0); }
 .result-icon img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
 .placeholder-icon { background: #f7f2e9; color: #c6a877; }
 .placeholder-icon img { filter: grayscale(1); opacity: .65; }
