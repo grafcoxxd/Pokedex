@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { findGermanImage } from '../src/fallback.js';
+import { findBoosterImage, findGermanImage } from '../src/fallback.js';
 
 const root = 'https://raw.githubusercontent.com/zsjy947/PTCG-card-data/master/data';
 const tcg = 'https://api.tcgdex.net/v2';
@@ -68,4 +68,38 @@ test('Japanisches Rasaff findet eine deutsche Vergleichsausgabe mit anderer ID',
     ? { ok: true, json: async () => ({ ...cards[url], stage: undefined }) }
     : mock(url);
   assert.equal(await findGermanImage('tcgdex', 'ja', 'M5-041', missingStage), null);
+});
+
+test('Ersatzbild bevorzugt Deutsch und nutzt bei gleicher Karten-ID andere Sprachen', async () => {
+  const german = await findBoosterImage('tcgdex', 'ja', 'sv06-033', fetcher);
+  assert.equal(german.language, 'de');
+  const englishCard = { id: 'sv06-033', name: 'Infernape', localId: '033', set: { name: 'Set' },
+    image: 'https://assets.tcgdex.net/en/sv/sv06/033' };
+  const noGerman = async (url) => {
+    if (url === `${tcg}/de/cards/sv06-033`) return { ok: false, status: 404 };
+    if (url === `${tcg}/en/cards/sv06-033`) return { ok: true, json: async () => englishCard };
+    return fetcher(url);
+  };
+  const english = await findBoosterImage('tcgdex', 'ja', 'sv06-033', noGerman);
+  assert.equal(english.language, 'en');
+  assert.match(english.url, /\/en\/sv\/sv06\/033\/low\.webp$/);
+  const none = async (url) => url === `${tcg}/ja/cards/sv06-033`
+    ? fetcher(url) : { ok: false, status: 404 };
+  assert.equal(await findBoosterImage('tcgdex', 'ja', 'sv06-033', none), null);
+});
+
+test('Chinesische Karte kann ein englisches Ersatzbild erhalten, wenn ein deutsches fehlt', async () => {
+  const english = {
+    [`${tcg}/en/sets/sv06`]: { cards: [{ id: 'sv06-033', localId: '033' }] },
+    [`${tcg}/en/cards/sv06-033`]: { id: 'sv06-033', name: 'Infernape', localId: '033',
+      set: { name: 'Twilight Masquerade' }, image: 'https://assets.tcgdex.net/en/sv/sv06/033' },
+  };
+  const mock = async (url) => {
+    if (url === `${tcg}/de/sets/sv06`) return { ok: false, status: 404 };
+    if (url in english) return { ok: true, json: async () => english[url] };
+    return fetcher(url);
+  };
+  const result = await findBoosterImage('ptcg', 'zh-cn', 'CBB4C:0901', mock);
+  assert.equal(result.language, 'en');
+  assert.match(result.url, /\/en\/sv\/sv06\/033\/low\.webp$/);
 });

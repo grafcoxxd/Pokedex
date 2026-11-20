@@ -1,3 +1,5 @@
+import { scoreSet } from './set-matching.js';
+
 const base = 'https://raw.githubusercontent.com/zsjy947/PTCG-card-data/master/data';
 const validId = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$/;
 
@@ -41,6 +43,7 @@ function mapCard(card, set) {
     id: `${set.id}:${card.cardIndex}`,
     name: card.nameEn ? `${card.cardName} (${card.nameEn})` : card.cardName,
     set: set.name,
+    setId: set.id,
     number: card.cardIndex,
     image: null,
     language: 'zh-cn',
@@ -58,6 +61,41 @@ async function cardsFor(set, fetcher) {
   const cards = await get(`cards/${encodeURIComponent(set.id)}.json`, fetcher);
   if (!Array.isArray(cards)) throw new Error('Ungültige Kartenliste von PTCG-card-data.');
   return cards;
+}
+
+export async function hasChineseSetCards(id, fetcher = fetch) {
+  if (typeof id !== 'string' || !validId.test(id)) throw new Error('Ungültige PTCG-Set-ID.');
+  return (await cardsFor({ id }, fetcher)).length > 0;
+}
+
+export async function searchChineseSets(query, page = 1, fetcher = fetch) {
+  if (typeof query !== 'string' || !query.trim() || query.length > 200) {
+    throw new Error('Bitte einen Setnamen oder ein Setkürzel eingeben.');
+  }
+  if (!Number.isInteger(page) || page < 1 || page > 1000) throw new Error('Ungültige Suchseite.');
+  const sets = (await index(fetcher))
+    .map((item) => ({ item, score: scoreSet(query, item.name, [item.id, item.code]) }))
+    .filter((match) => match.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((match) => match.item);
+  return {
+    sets: sets.slice((page - 1) * 15, page * 15).map((item) => ({
+      id: item.id, name: item.name, provider: 'ptcg', language: 'zh-cn',
+    })),
+    totalSets: sets.length,
+    hasMore: page * 15 < sets.length,
+  };
+}
+
+export async function getChineseSetCards(id, fetcher = fetch) {
+  if (typeof id !== 'string' || !validId.test(id)) throw new Error('Ungültige PTCG-Set-ID.');
+  const set = (await index(fetcher)).find((item) => item.id === id);
+  if (!set) throw new Error('Set nicht in PTCG-card-data gefunden.');
+  const cards = (await cardsFor(set, fetcher)).map((item) => {
+    const card = mapCard(item, set);
+    return { id: card.id, name: card.name, number: card.number, image: card.image };
+  });
+  return { name: set.name, cards, total: null };
 }
 
 export async function searchChineseCards(set, number, page = 1, fetcher = fetch) {

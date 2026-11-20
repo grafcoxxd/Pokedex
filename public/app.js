@@ -35,6 +35,32 @@ async function request(path, options) {
   return data;
 }
 
+function editPassword() {
+  const dialog = $('#edit-password-dialog');
+  const input = $('#edit-password');
+  input.value = '';
+  dialog.returnValue = '';
+  return new Promise((resolve) => {
+    dialog.addEventListener('close', () => {
+      const password = dialog.returnValue === 'accept' ? input.value : null;
+      input.value = '';
+      resolve(password);
+    }, { once: true });
+    dialog.showModal();
+    input.focus();
+  });
+}
+
+async function protectedRequest(path, options) {
+  const password = await editPassword();
+  if (password === null) return false;
+  await request(path, {
+    ...options,
+    headers: { ...options.headers, 'X-Edit-Password': encodeURIComponent(password) },
+  });
+  return true;
+}
+
 async function refresh() {
   const data = await request('/api/binders');
   binders = data.binders;
@@ -231,6 +257,244 @@ function addGermanFallback(container, provider, language, id) {
   }).catch((error) => { note.textContent = `Ersatzbildsuche fehlgeschlagen: ${error.message}`; });
 }
 
+function addCardCorpusFallback(container, provider, language, id) {
+  if (!['ja', 'zh-cn'].includes(language)) {
+    addGermanFallback(container, provider, language, id);
+    return;
+  }
+  const note = node('span', 'fallback-note', 'CardCorpus-Bild wird gesucht …');
+  container.append(note);
+  const fallback = (warnings = []) => {
+    note.textContent = warnings.join(' ');
+    const picture = node('div');
+    container.append(picture);
+    addGermanFallback(picture, provider, language, id);
+  };
+  const params = new URLSearchParams({ provider, language, id });
+  request(`/api/cardcorpus-extra?${params}`).then(({ card, warnings }) => {
+    if (!card?.corpusImage) {
+      fallback(warnings);
+      return;
+    }
+    note.textContent = `Bild: CardCorpus${warnings.length ? ` · ${warnings.join(' ')}` : ''}`;
+    const picture = cardImage(card.corpusImage, card.name, () => {
+      note.textContent = 'CardCorpus-Bild konnte nicht geladen werden.';
+      fallback([note.textContent]);
+    });
+    container.replaceChildren(picture, note);
+  }).catch((error) => fallback([`CardCorpus: ${error.message}`]));
+}
+
+function boosterSearch(container) {
+  container.replaceChildren();
+  const form = node('form', 'image-search-form');
+  const setField = field('Setname oder Setcode', 'set', 'z.B. sv9a');
+  const langField = languageField('de');
+  const submit = node('button', 'primary', 'Set suchen');
+  submit.type = 'submit';
+  const status = node('p', 'form-note');
+  status.setAttribute('role', 'status');
+  const sets = node('div', 'booster-sets');
+  const pages = node('div', 'search-pages');
+  const cards = node('div', 'booster-cards');
+  form.append(setField, langField, submit);
+  container.append(form, status, sets, pages, cards);
+  let sequence = 0;
+  let searchValues;
+  let searchTimer;
+  let observer;
+  let activeFallbacks = 0;
+  const fallbackQueue = [];
+  const queued = new WeakSet();
+
+  function clearFallbacks() {
+    if (observer) observer.disconnect();
+    fallbackQueue.length = 0;
+  }
+
+  function runFallbacks() {
+    while (activeFallbacks < 3 && fallbackQueue.length) {
+      const { picture, card, item, current } = fallbackQueue.shift();
+      if (current !== sequence || !picture.isConnected) continue;
+      activeFallbacks++;
+      const note = node('span', 'fallback-note', 'Ersatzbild wird gesucht …');
+      picture.append(note);
+      const params = new URLSearchParams({ provider: item.provider, language: item.language, id: card.id });
+      request(`/api/booster-image?${params}`).then(({ image }) => {
+        if (current !== sequence || !picture.isConnected) return;
+        if (!image) {
+          note.textContent = 'Kein Ersatzbild gefunden.';
+          return;
+        }
+        const label = `Ersatzbild (${image.language.toUpperCase()}): ${image.label} · Motiv oder Variante kann abweichen.`;
+        const replacement = cardImage(image.url, image.label, () => {
+          note.textContent = `Ersatzbild (${image.language.toUpperCase()}) konnte nicht geladen werden.`;
+        });
+        note.textContent = label;
+        picture.replaceChildren(replacement, note);
+      }).catch((error) => {
+        if (current === sequence && picture.isConnected) note.textContent = `Ersatzbildsuche fehlgeschlagen: ${error.message}`;
+      }).finally(() => {
+        activeFallbacks--;
+        runFallbacks();
+      });
+    }
+  }
+
+  function queueFallback(picture, card, item, current) {
+    if (current !== sequence || !picture.isConnected || queued.has(picture)) return;
+    queued.add(picture);
+    fallbackQueue.push({ picture, card, item, current });
+    runFallbacks();
+  }
+
+  async function showSet(item, selectedButton) {
+    const current = ++sequence;
+    clearFallbacks();
+    for (const candidate of sets.querySelectorAll('.booster-set')) candidate.setAttribute('aria-pressed', 'false');
+    cards.replaceChildren();
+    status.textContent = `${item.name} wird geladen …`;
+    try {
+      const params = new URLSearchParams({ id: item.id, language: item.language, provider: item.provider });
+      const result = await request(`/api/booster-set?${params}`);
+      if (current !== sequence) return;
+      selectedButton.setAttribute('aria-pressed', 'true');
+      const source = item.provider === 'tcgdex' ? 'TCGdex' : 'PTCG-card-data';
+      status.textContent = `${result.name} · ${source} · ${result.cards.length} Katalogeinträge`;
+      if (result.total !== null && result.cards.length < result.total) {
+        status.textContent += ` von ${result.total} gemeldeten Karten; die Liste ist unvollständig.`;
+      }
+      if (!result.cards.length) {
+        cards.append(node('p', 'muted', 'Für dieses Set sind in dieser Quelle keine Karten verfügbar.'));
+        return;
+      }
+      if (item.comparison || result.comparison) {
+        cards.append(node('p', 'search-warning',
+          'Japanische Vergleichsliste: Die koreanische Ausgabe und ihr Boosterinhalt können abweichen.'));
+      }
+      for (const warning of result.warnings || []) cards.append(node('p', 'search-warning', warning));
+      if (result.cards.some((card) => card.corpusImage || card.germanName)) {
+        const credit = node('p', 'muted');
+        credit.append('Ergänzende Daten und Bilder: ');
+        const link = node('a', '', 'CardCorpus');
+        link.href = 'https://github.com/cardcorpus/pokemon-card-dataset';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        credit.append(link, '. Deutsche Namen stammen aus zugeordneten TCGdex-Karten.');
+        cards.append(credit);
+      }
+      const grid = node('div', 'booster-grid');
+      const missing = new Map();
+      observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          observer.unobserve(entry.target);
+          const task = missing.get(entry.target);
+          if (task) queueFallback(task.picture, task.card, task.item, current);
+        }
+      }, { root: $('#booster-dialog'), rootMargin: '200px' });
+      const imageSource = result.comparison ? { provider: 'tcgdex', language: 'ja' } : item;
+      for (const card of result.cards) {
+        const tile = node('article', 'booster-card');
+        const picture = node('div');
+        const showCorpus = () => {
+          if (!card.corpusImage) {
+            queueFallback(picture, card, imageSource, current);
+            return;
+          }
+          const image = cardImage(card.corpusImage, card.name, () => queueFallback(picture, card, imageSource, current));
+          picture.replaceChildren(image, node('span', 'fallback-note', 'Bild: CardCorpus'));
+        };
+        if (card.image) picture.append(cardImage(card.image, card.name, showCorpus));
+        else if (card.corpusImage) showCorpus();
+        else {
+          picture.append(cardImage(null, card.name));
+          missing.set(tile, { picture, card, item: imageSource });
+        }
+        tile.append(picture, node('strong', '', card.germanName || card.name));
+        if (card.germanName && card.germanName !== card.name) {
+          tile.append(node('small', '', `Original: ${card.name}`));
+        }
+        tile.append(node('small', '', `Nr. ${card.number}`));
+        grid.append(tile);
+      }
+      cards.append(grid);
+      for (const tile of missing.keys()) observer.observe(tile);
+    } catch (error) {
+      if (current === sequence) status.textContent = `Set konnte nicht geladen werden: ${error.message}`;
+    }
+  }
+
+  async function runSearch(searchPage) {
+    const current = ++sequence;
+    clearFallbacks();
+    const values = searchValues;
+    submit.disabled = true;
+    sets.replaceChildren();
+    pages.replaceChildren();
+    cards.replaceChildren();
+    status.textContent = 'Sets werden gesucht …';
+    try {
+      const params = new URLSearchParams({ ...values, page: String(searchPage) });
+      const result = await request(`/api/booster-sets?${params}`);
+      if (current !== sequence) return;
+      status.textContent = result.sets.length ? 'Wähle ein Set aus.' : 'Keine passenden Sets in dieser Sprache gefunden.';
+      for (const warning of result.warnings) sets.append(node('p', 'search-warning', warning));
+      for (const item of result.sets) {
+        const source = item.provider === 'tcgdex' ? 'TCGdex' : 'PTCG-card-data';
+        const choose = button('', 'booster-set', () => showSet(item, choose));
+        choose.setAttribute('aria-pressed', 'false');
+        choose.append(node('strong', '', item.name),
+          node('small', '', `${item.id} · ${source}${item.comparison ? ' · Japanischer Vergleich' : ''}`));
+        sets.append(choose);
+      }
+      if (searchPage > 1) pages.append(button('← Vorherige Sets', 'secondary', () => runSearch(searchPage - 1)));
+      if (result.hasMore) pages.append(button('Weitere Sets →', 'secondary', () => runSearch(searchPage + 1)));
+    } catch (error) {
+      if (current === sequence) status.textContent = `Suche fehlgeschlagen: ${error.message}`;
+    } finally {
+      if (current === sequence) submit.disabled = false;
+    }
+  }
+
+  function startSearch() {
+    searchValues = { set: setField.querySelector('input').value.trim(), language: langField.querySelector('select').value };
+    if (!searchValues.set) {
+      status.textContent = 'Bitte einen Setnamen oder Setcode eingeben.';
+      return;
+    }
+    runSearch(1);
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    clearTimeout(searchTimer);
+    startSearch();
+  });
+  function suggestSets() {
+    clearTimeout(searchTimer);
+    sequence++;
+    clearFallbacks();
+    submit.disabled = false;
+    sets.replaceChildren();
+    pages.replaceChildren();
+    cards.replaceChildren();
+    if (setField.querySelector('input').value.trim().length < 3) {
+      status.textContent = '';
+      return;
+    }
+    status.textContent = 'Suche wird vorbereitet …';
+    searchTimer = setTimeout(startSearch, 500);
+  }
+  setField.querySelector('input').addEventListener('input', suggestSets);
+  langField.querySelector('select').addEventListener('change', suggestSets);
+  $('#booster-dialog').addEventListener('close', () => {
+    clearTimeout(searchTimer);
+    sequence++;
+    clearFallbacks();
+  }, { once: true });
+}
+
 function confirmCard(found, target, targetDex, linking, warnings) {
   const dialog = $('#card-confirm');
   $('#confirm-title').textContent = linking ? 'Karte verknüpfen' : 'Karte hinzufügen';
@@ -283,17 +547,41 @@ function imageSearch(card, dex, container) {
       if (sequence !== searchSequence) return;
       results.replaceChildren();
       results.append(node('p', 'form-note', `Passende Sets in den Katalogen: ${result.totalSets} · Setgruppe ${result.page}. Der Teil nach / wird nur geprüft, wenn die Quelle die vollständige Nummer enthält.`));
-      for (const warning of result.warnings) results.append(node('p', 'search-warning', `Katalog nicht verfügbar: ${warning}`));
+      for (const warning of result.warnings) results.append(node('p', 'search-warning', warning));
       if (!result.cards.length) results.append(node('p', 'muted', 'In dieser Setgruppe kein Treffer. Weitere Setgruppen prüfen oder Kartensprache und Nummer ändern.'));
+      if (result.cards.some((candidate) => candidate.corpusImage || candidate.germanName)) {
+        const credit = node('p', 'form-note');
+        credit.append('Ergänzende Daten und Bilder: ');
+        const link = node('a', '', 'CardCorpus');
+        link.href = 'https://github.com/cardcorpus/pokemon-card-dataset';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        credit.append(link, '.');
+        results.append(credit);
+      }
       for (const candidate of result.cards) {
         const row = node('div', 'candidate');
         const picture = node('div', 'candidate-picture');
-        picture.append(cardImage(candidate.image, candidate.name,
-          () => addGermanFallback(picture, candidate.provider, candidate.language, candidate.id)));
-        if (!candidate.image) addGermanFallback(picture, candidate.provider, candidate.language, candidate.id);
+        const showCorpus = () => {
+          if (!candidate.corpusImage) {
+            addGermanFallback(picture, candidate.provider, candidate.language, candidate.id);
+            return;
+          }
+          const image = cardImage(candidate.corpusImage, candidate.name,
+            () => addGermanFallback(picture, candidate.provider, candidate.language, candidate.id));
+          picture.replaceChildren(image, node('span', 'fallback-note', 'Bild: CardCorpus'));
+        };
+        if (candidate.image) picture.append(cardImage(candidate.image, candidate.name, showCorpus));
+        else if (candidate.corpusImage) showCorpus();
+        else {
+          picture.append(cardImage(null, candidate.name));
+          addGermanFallback(picture, candidate.provider, candidate.language, candidate.id);
+        }
         row.append(picture);
         const info = node('div', 'candidate-info');
-        info.append(node('strong', '', candidate.name), node('small', '', `${candidate.set} · ${candidate.number} · ${candidate.id}`));
+        info.append(node('strong', '', candidate.germanName || candidate.name));
+        if (candidate.germanName && candidate.germanName !== candidate.name) info.append(node('small', '', `Original: ${candidate.name}`));
+        info.append(node('small', '', `${candidate.set} · ${candidate.number} · ${candidate.id}`));
         if (candidate.comparison) info.append(node('small', 'search-warning', 'Japanische Vergleichskarte, keine bestätigte koreanische Ausgabe. Bitte selbst vergleichen.'));
         if (!candidate.suffixVerified && values.number.includes('/')) info.append(node('small', 'search-warning', 'Teil nach / nicht verifiziert.'));
         const choose = button('Auswählen', 'secondary', async () => {
@@ -312,17 +600,21 @@ function imageSearch(card, dex, container) {
               const mismatch = !general && found.dexIds.length
                 ? (found.dexIds.includes(targetDex) ? '' : `Achtung: Die Quelle nennt Dex-Nr. ${found.dexIds.join(', ')}, nicht #${targetDex}.`)
                 : (!general ? 'Für diese Karte meldet die Quelle keine überprüfte Dex-Nummer. Bitte prüfe die Zuordnung selbst.' : '');
-              const confirmed = await confirmCard(found, target, targetDex, Boolean(card), [mismatch, unverified, comparison]);
+              const confirmed = await confirmCard({ ...found, name: candidate.germanName || found.name }, target, targetDex, Boolean(card), [mismatch, unverified, comparison]);
               if (!confirmed) {
                 choose.disabled = false;
                 return;
               }
               let added;
               if (card) {
-                await request(`/api/cards/${encodeURIComponent(card.id)}`, {
+                const updated = await protectedRequest(`/api/cards/${encodeURIComponent(card.id)}`, {
                   method: 'PUT', headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ id: found.id, language: found.language, provider: candidate.provider, cardLanguage: values.language }),
                 });
+                if (!updated) {
+                  choose.disabled = false;
+                  return;
+                }
               } else {
                 ({ card: added } = await request('/api/cards', {
                   method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -649,8 +941,8 @@ function showDetail(dex, openSearch, fromHistory = false) {
     if (catalog) {
       const picture = node('div', 'candidate-picture');
       picture.append(cardImage(catalog.image, catalog.name,
-        () => addGermanFallback(picture, slot.card.ptcg ? 'ptcg' : 'tcgdex', catalog.language, catalog.id)));
-      if (!catalog.image) addGermanFallback(picture, slot.card.ptcg ? 'ptcg' : 'tcgdex', catalog.language, catalog.id);
+        () => addCardCorpusFallback(picture, slot.card.ptcg ? 'ptcg' : 'tcgdex', catalog.language, catalog.id)));
+      if (!catalog.image) addCardCorpusFallback(picture, slot.card.ptcg ? 'ptcg' : 'tcgdex', catalog.language, catalog.id);
       row.append(picture);
     }
     const info = node('div');
@@ -671,7 +963,7 @@ function showDetail(dex, openSearch, fromHistory = false) {
     actions.append(find, button('Entfernen', 'remove', async () => {
       if (!confirm(`Karte ${slot.card.set} ${slot.card.number} entfernen?`)) return;
       try {
-        await request(`/api/cards/${encodeURIComponent(slot.card.id)}`, { method: 'DELETE' });
+        if (!await protectedRequest(`/api/cards/${encodeURIComponent(slot.card.id)}`, { method: 'DELETE' })) return;
         await refresh();
         if (currentDetail === dex) showDetail(dex);
         notify('Karte entfernt. Die Binderplätze wurden neu berechnet.');
@@ -724,6 +1016,11 @@ $('#add-general').addEventListener('click', () => {
   $('#general-add').showModal();
 });
 $('#close-general').addEventListener('click', () => $('#general-add').close());
+$('#open-booster').addEventListener('click', () => {
+  boosterSearch($('#booster-search'));
+  $('#booster-dialog').showModal();
+});
+$('#close-booster').addEventListener('click', () => $('#booster-dialog').close());
 $('#confirm-close').addEventListener('click', () => $('#card-confirm').close('cancel'));
 $('#card-confirm').addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {

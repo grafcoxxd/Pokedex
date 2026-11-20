@@ -1,12 +1,13 @@
 import { createServer } from 'node:http';
+import { createHash, timingSafeEqual } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { addCard, BINDER_CAPACITY, linkCard, positions, removeCard, setHolo } from './binder.js';
 import { createStore } from './storage.js';
 import { getCard } from './tcgdex.js';
 import { getChineseCard } from './ptcg.js';
-import { searchCatalog } from './catalog-search.js';
-import { findGermanImage } from './fallback.js';
+import { getBoosterSet, getCardCorpusExtra, searchBoosterSets, searchCatalog } from './catalog-search.js';
+import { findBoosterImage, findGermanImage } from './fallback.js';
 import { resolvePokemon } from './pokemon-resolution.js';
 import { getPokedex } from './pokedex.js';
 
@@ -27,6 +28,39 @@ const databasePath = process.env.BINDER_DB || 'collection.json';
 const seedPath = fileURLToPath(new URL('../data/seed.json', import.meta.url));
 const port = Number(process.env.PORT || 3000);
 if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Ungültiger PORT.');
+const editPassword = process.env.EDIT_PASSWORD;
+const editPasswordHash = editPassword ? createHash('sha256').update(editPassword).digest() : null;
+let failedEditAttempts = 0;
+let editLockedUntil = 0;
+
+function authorizeEdit(req, res) {
+  if (!editPasswordHash) {
+    respond(res, 503, { error: 'Änderungen sind gesperrt: EDIT_PASSWORD ist nicht eingerichtet.' });
+    return false;
+  }
+  if (Date.now() < editLockedUntil) {
+    respond(res, 429, { error: 'Zu viele falsche Passwörter. Bitte in 15 Minuten erneut versuchen.' });
+    return false;
+  }
+  let password;
+  try {
+    password = decodeURIComponent(req.headers['x-edit-password'] || '');
+  } catch {
+    password = '';
+  }
+  const hash = createHash('sha256').update(password).digest();
+  if (!password || !timingSafeEqual(hash, editPasswordHash)) {
+    failedEditAttempts++;
+    if (failedEditAttempts >= 10) {
+      failedEditAttempts = 0;
+      editLockedUntil = Date.now() + 15 * 60 * 1000;
+    }
+    respond(res, 401, { error: 'Passwort falsch oder nicht eingegeben.' });
+    return false;
+  }
+  failedEditAttempts = 0;
+  return true;
+}
 
 async function catalogCard(id, language, provider) {
   if (!provider || provider === 'tcgdex') return getCard(id, language);
@@ -123,6 +157,24 @@ const server = createServer(async (req, res) => {
       }
       return;
     }
+    if (req.method === 'GET' && url.pathname === '/api/booster-sets') {
+      try {
+        const page = Number(url.searchParams.get('page') || '1');
+        respond(res, 200, await searchBoosterSets(url.searchParams.get('set'), url.searchParams.get('language'), page));
+      } catch (error) {
+        respond(res, 400, { error: error.message });
+      }
+      return;
+    }
+    if (req.method === 'GET' && url.pathname === '/api/booster-set') {
+      try {
+        respond(res, 200, await getBoosterSet(url.searchParams.get('id'),
+          url.searchParams.get('language'), url.searchParams.get('provider')));
+      } catch (error) {
+        respond(res, 400, { error: error.message });
+      }
+      return;
+    }
     if (req.method === 'GET' && url.pathname === '/api/card-search') {
       try {
         const lang = url.searchParams.get('language');
@@ -131,6 +183,24 @@ const server = createServer(async (req, res) => {
         const page = Number(url.searchParams.get('page') || '1');
         const result = await searchCatalog(set, number, lang, page);
         respond(res, 200, result);
+      } catch (error) {
+        respond(res, 400, { error: error.message });
+      }
+      return;
+    }
+    if (req.method === 'GET' && url.pathname === '/api/booster-image') {
+      try {
+        const image = await findBoosterImage(url.searchParams.get('provider'), url.searchParams.get('language'), url.searchParams.get('id'));
+        respond(res, 200, { image });
+      } catch (error) {
+        respond(res, 400, { error: error.message });
+      }
+      return;
+    }
+    if (req.method === 'GET' && url.pathname === '/api/cardcorpus-extra') {
+      try {
+        respond(res, 200, await getCardCorpusExtra(url.searchParams.get('id'),
+          url.searchParams.get('language'), url.searchParams.get('provider')));
       } catch (error) {
         respond(res, 400, { error: error.message });
       }
@@ -213,11 +283,14 @@ const server = createServer(async (req, res) => {
       return;
     }
     const cardMatch = url.pathname.match(/^\/api\/cards\/([a-f0-9-]+)$/i);
-    if (req.method === 'PUT' && cardMatch) {
+    if (cardMatch && ['PUT', 'PATCH', 'DELETE'].includes(req.method)) {
       if (!isSameOrigin(req)) {
         respond(res, 403, { error: 'Fremde Herkunft ist nicht erlaubt.' });
         return;
       }
+      if (!authorizeEdit(req, res)) return;
+    }
+    if (req.method === 'PUT' && cardMatch) {
       if (!req.headers['content-type']?.startsWith('application/json')) {
         respond(res, 415, { error: 'JSON erforderlich.' });
         return;
@@ -244,10 +317,6 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (req.method === 'PATCH' && cardMatch) {
-      if (!isSameOrigin(req)) {
-        respond(res, 403, { error: 'Fremde Herkunft ist nicht erlaubt.' });
-        return;
-      }
       if (!req.headers['content-type']?.startsWith('application/json')) {
         respond(res, 415, { error: 'JSON erforderlich.' });
         return;
@@ -263,10 +332,6 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (req.method === 'DELETE' && cardMatch) {
-      if (!isSameOrigin(req)) {
-        respond(res, 403, { error: 'Fremde Herkunft ist nicht erlaubt.' });
-        return;
-      }
       try {
         await mutate((data) => removeCard(data, cardMatch[1]));
         respond(res, 200, { ok: true });

@@ -11,6 +11,7 @@
 <body>
   <header class="topbar">
     <div class="brand"><button type="button" id="home" class="brand-mark" aria-label="Zurück zur Binderübersicht">◉</button><span>NICK'S PRIVATE <small>Pokédex</small></span></div>
+    <button id="open-booster" class="secondary booster-open" type="button">Booster-Übersicht</button>
   </header>
   <main>
     <div id="collection-view">
@@ -35,6 +36,16 @@
     </section>
   </main>
   <footer>POKÉMON-BINDER <span>Deine Sammlung. Deine Ordnung.</span> <a href="/qr.html" class="qr-link">QR-Codes</a></footer>
+  <dialog id="booster-dialog" class="booster-dialog" aria-labelledby="booster-title">
+    <div class="dialog-top">
+      <span class="eyebrow">KARTENKATALOG</span>
+      <button id="close-booster" class="close" type="button" aria-label="Schließen">×</button>
+    </div>
+    <h2 id="booster-title" class="general-title">Booster-Übersicht</h2>
+    <p class="form-note">Suche nach Setcode oder Setname und wähle die Sprache des Boosters.</p>
+    <p class="form-note">Die Liste zeigt Katalogkarten des Sets. Sie kann unvollständig sein oder Karten enthalten, die nicht in Boostern erhältlich sind.</p>
+    <div id="booster-search"></div>
+  </dialog>
   <dialog id="general-add">
     <div class="dialog-top"><span class="eyebrow">ALLGEMEINE KARTENSUCHE</span><button id="close-general" class="close" aria-label="Schließen" type="button">×</button></div>
     <h2 class="general-title">Karte hinzufügen</h2>
@@ -64,6 +75,19 @@
     <form method="dialog" class="confirm-actions">
       <button class="secondary" value="cancel" autofocus>Abbrechen</button>
       <button id="confirm-accept" class="primary" value="accept"></button>
+    </form>
+  </dialog>
+  <dialog id="edit-password-dialog" class="card-confirm" aria-labelledby="edit-password-title">
+    <h2 id="edit-password-title" class="confirm-title">Änderung schützen</h2>
+    <p class="form-note">Bitte gib das Passwort für Änderungen ein.</p>
+    <form method="dialog">
+      <label class="field">Passwort
+        <input id="edit-password" type="password" autocomplete="current-password" required>
+      </label>
+      <div class="confirm-actions">
+        <button class="secondary" value="cancel" formnovalidate>Abbrechen</button>
+        <button class="primary" value="accept">Bestätigen</button>
+      </div>
     </form>
   </dialog>
   <div id="message" role="status" aria-live="polite"></div>

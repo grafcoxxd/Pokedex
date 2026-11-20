@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getCard, searchCards } from '../src/tcgdex.js';
+import { getCard, getSetCards, searchCards, searchSets } from '../src/tcgdex.js';
 import { linkCard, loadDatabase, addCard, validate } from '../src/binder.js';
 
 const fake = async (url) => {
@@ -127,4 +127,57 @@ test('Japanische Vergleichssuche berücksichtigt vollständige Eingabe ohne Setg
   assert.equal(result.cards[0].id, 'M5-041');
   assert.equal(result.cards[0].language, 'ja');
   assert.equal(result.cards[0].suffixVerified, false);
+});
+
+test('Gedrucktes Setkürzel wird mit Sprachzusatz über den englischen Setnamen zugeordnet', async () => {
+  const data = {
+    'https://api.tcgdex.net/v2/de/sets': [{ id: 'me06', name: 'Delta-Herrschaft' }],
+    'https://api.tcgdex.net/v2/en/sets': [{ id: 'me06', name: 'Delta Reign' }],
+    'https://api.pokemontcg.io/v2/sets?q=ptcgoCode%3ADLR': {
+      data: [{ id: 'me6', name: 'Delta Reign', ptcgoCode: 'DLR' }],
+    },
+    'https://api.tcgdex.net/v2/de/sets/me06': {
+      cards: [{ id: 'me06-078', localId: '078', name: 'Evoli' }],
+    },
+  };
+  const fetcher = async (url) => ({ ok: url in data, status: 404, json: async () => data[url] });
+  for (const code of ['DLR DE', 'dlr']) {
+    const result = await searchCards(code, '078/103', 'de', fetcher);
+    assert.deepEqual(result.cards.map((card) => card.id), ['me06-078']);
+  }
+  assert.equal((await searchCards('DLR EN', '078/103', 'de', fetcher)).cards.length, 0);
+  await assert.rejects(searchCards('DLR DE', '078/103', 'de', async (url) => {
+    if (url.startsWith('https://api.pokemontcg.io/')) throw new Error('offline');
+    return fetcher(url);
+  }), /Setkürzel-Suche.*offline/);
+  assert.deepEqual((await searchSets('DLR DE', 'de', 1, fetcher)).sets.map((set) => set.id), ['me06']);
+});
+
+test('Setübersicht begrenzt Settreffer und prüft Daten und Bild-URLs', async () => {
+  const fetcher = async (url) => ({ ok: true, json: async () => url.endsWith('/sets')
+    ? Array.from({ length: 16 }, (_, index) => ({ id: `s${index}`, name: `Set ${index}` }))
+    : { id: 's0', name: 'Set 0', cardCount: { total: 2 },
+      cards: [{ id: 's0-1', localId: '1', name: 'Karte', image: 'https://example.com/image' }] } });
+  const first = await searchSets('Set', 'ja', 1, fetcher);
+  assert.equal(first.sets.length, 15);
+  assert.equal(first.hasMore, true);
+  assert.deepEqual((await searchSets('Set', 'ja', 2, fetcher)).sets.map((set) => set.id), ['s15']);
+  const detail = await getSetCards('s0', 'ja', fetcher);
+  assert.equal(detail.total, 2);
+  assert.equal(detail.cards[0].image, null);
+  await assert.rejects(getSetCards('s1', 'ja', fetcher), /Ungültige Setdaten/);
+});
+
+test('Setvorschläge tolerieren Satzzeichen und Tippfehler und sortieren passende Ergebnisse zuerst', async () => {
+  const fetcher = async () => ({ ok: true, json: async () => [
+    { id: 'special', name: 'Delta-Herrschaft Spezial' },
+    { id: 'me06', name: 'Delta-Herrschaft' },
+    { id: 'sv9a', name: 'Heat Wave Arena' },
+    { id: 'other', name: 'Andere Erweiterung' },
+  ] });
+  const names = async (query) => (await searchSets(query, 'de', 1, fetcher)).sets.map((set) => set.id);
+  assert.deepEqual((await names('Delta Herrschaft')).slice(0, 2), ['me06', 'special']);
+  assert.deepEqual((await names('delta herrchaf')).slice(0, 2), ['special', 'me06']);
+  assert.equal((await names('sv9a'))[0], 'sv9a');
+  assert.deepEqual(await names('Andere Erweiterung'), ['other']);
 });

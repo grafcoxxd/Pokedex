@@ -30,9 +30,13 @@ Nach dem Bestätigen belegt die erste Karte das reservierte Fach des Pokémon, w
 
 Die Suche bei [TCGdex](https://tcgdex.dev/) unterstützt Deutsch, Englisch, Japanisch, Koreanisch und traditionelles sowie vereinfachtes Chinesisch. Vor und nach dem Schrägstrich werden bei Zahlen führende Nullen ignoriert. Die Suche vergleicht den Teil vor `/`; falls die Quelle die vollständige Nummer einschließlich `/` enthält, wird auch der zweite Teil verglichen. Andernfalls wird dieser ausdrücklich als nicht überprüft markiert. Setgrößen werden nicht als Filter verwendet. Auch Sondernummern wie `TG12` können gesucht werden. Passende Sets werden je Katalog in Gruppen von 15 durchsucht; mit **Weitere Sets** sind zusätzliche Ergebnisse erreichbar.
 
+Für deutsche und englische Karten können auch gedruckte westliche Setkürzel wie `DLR` oder `DLR DE` eingegeben werden. Falls TCGdex das Kürzel nicht direkt kennt, sucht die App es bei der Pokémon TCG API und gleicht den englischen Setnamen mit TCGdex ab. Nicht alle Kürzel und Sets sind dort verfügbar; die Zuordnung ist kein Nachweis des Boosterinhalts. Sprachzusätze müssen zur ausgewählten Kartensprache passen.
+
 Für vereinfachtes Chinesisch wird zusätzlich **PTCG-card-data** automatisch durchsucht. Dort wird nur die Nummer vor `/` verglichen; Angaben nach `/` und die Pokémon-Zuordnung werden nicht automatisch verifiziert. Beispielsweise findet `0901/07` im Set `CBB4C` einen Panferno-Eintrag. Vergleiche jeden Treffer vor dem Speichern mit deiner Karte. Ist eine Quelle nicht erreichbar, werden Ergebnisse anderer Quellen mit einem entsprechenden Hinweis angezeigt.
 
 Bei Koreanisch werden zusätzlich japanische Vergleichskarten gesucht. Sie sind ausdrücklich gekennzeichnet und keine verifizierten koreanischen Originalausgaben: gleiche Nummern oder Sets garantieren keine Übereinstimmung. Prüfe den Treffer selbst. Die App speichert die tatsächliche Kartensprache Koreanisch getrennt von der japanischen Katalogsprache und kennzeichnet die Verknüpfung als Vergleich. Beispiel: `041/081` mit Set `M5` findet die japanische Rasaff-Vergleichskarte; der Teil nach `/` ist dabei nicht verifiziert.
+
+Für japanische und vereinfacht chinesische Treffer ergänzt [CardCorpus](https://github.com/cardcorpus/pokemon-card-dataset) nach Möglichkeit ein Bild und einen deutschen Namen. Das ergänzt vorhandene TCGdex- und PTCG-card-data-Treffer, ist aber keine eigenständige zusätzliche Kartensuche. Bei gespeicherten Karten wird das CardCorpus-Bild bei Bedarf erneut online gesucht; die ursprüngliche Katalogverknüpfung und Kartensprache bleiben unverändert. CardCorpus führt keine koreanischen Karten.
 
 Fehlt ein Bild in der ursprünglichen Sprache oder kann es nicht geladen werden, sucht die App nach einer deutschen Ausgabe. Bei TCGdex wird zunächst dieselbe Karten-ID verwendet. Falls dies kein Bild liefert, werden deutsche Karten anhand von Dex-Nummer, Illustrator, KP und Entwicklungsstufe verglichen; nur bei genau einem passenden Treffer mit Bild wird ein Vorschlag angezeigt. Diese Merkmale beweisen keine Motivgleichheit. Bei PTCG-card-data werden die englischen Referenzangaben der Quelle über die [Setliste von Pokémon TCG Data](https://github.com/PokemonTCG/pokemon-tcg-data) einer deutschen TCGdex-Karte zugeordnet. Das Ergebnis wird als **deutsches Ersatzbild** gekennzeichnet: Motiv, Druck oder Variante können von deiner Karte abweichen. Die ursprüngliche Kartenverknüpfung bleibt unverändert. Ersatzbilder werden beim Anzeigen online gesucht und nicht dauerhaft gespeichert.
 
@@ -40,9 +44,19 @@ Die chinesische Ergänzung stammt aus [PTCG-card-data](https://github.com/zsjy94
 
 Eine Verknüpfung speichert die Katalog-ID, Sprache, den Kartennamen und ggf. die Bildadresse, ohne die manuell eingegebenen Angaben oder den Binderplatz zu verändern. Prüfe den Treffer selbst: Die Zuordnung wird nicht automatisch ermittelt; wenn die API eine abweichende oder keine Dex-Nummer meldet, erscheint vor dem Speichern eine Warnung. Auch Varianten eines Kartenmotivs lassen sich nicht immer unterscheiden. Die Abdeckung bei TCGdex ist je nach Sprache und Set unterschiedlich; insbesondere asiatische Setlisten können leere Kartenlisten oder fehlende Bilder enthalten. Eine andere Sprache oder ein anderer Suchbegriff kann helfen. Unter **Katalog ändern** kann eine Karte neu verknüpft werden.
 
-Die Suche benötigt Internetzugang: Der Server ruft Setlisten und passende Sets von TCGdex bzw. GitHub ab; bei der allgemeinen Suche kann zusätzlich der englische Kartenname an PokéAPI übertragen werden. Bilder lädt der Browser direkt von TCGdex; sie sind nicht lokal gespeichert und bleiben ohne Internet ggf. nicht sichtbar.
+Die Suche benötigt Internetzugang: Der Server ruft Setlisten und passende Sets von TCGdex bzw. GitHub ab; bei der allgemeinen Suche kann zusätzlich der englische Kartenname an PokéAPI übertragen werden. Bilder lädt der Browser direkt von TCGdex oder CardCorpus; sie sind nicht lokal gespeichert und bleiben ohne Internet ggf. nicht sichtbar.
 
-Der Server ist absichtlich nur auf diesem Rechner erreichbar, ohne Anmeldung und ausschließlich als lokale Testversion gedacht. Zugriff vom Smartphone oder übers Internet ist noch nicht eingerichtet. Der Port kann über `PORT`, der Pfad zur Datenbank über `BINDER_DB` geändert werden. Beispiel:
+### Booster-Übersicht
+
+Über **Booster-Übersicht** im Kopfbereich lässt sich ein Setname oder Setcode wie `sv9a` mit Kartensprache suchen. Ab drei Zeichen erscheinen Vorschläge; Leerzeichen und Bindestriche werden gleich behandelt und kleinere Schreibfehler berücksichtigt. Sets ohne verfügbare Kartenliste werden ausgeblendet. Kann eine Liste nicht geprüft werden, bleibt der Vorschlag mit einer Warnung sichtbar. Wähle anschließend einen Treffer, um die bei TCGdex gelisteten Karten mit Namen, Nummern und verfügbaren Bildern zu sehen. Für vereinfachtes Chinesisch werden zusätzlich Ergebnisse von PTCG-card-data angeboten. Fehlende Bilder werden nach Möglichkeit durch gekennzeichnete Ersatzbilder ersetzt, bevorzugt aus Deutschland; Motiv oder Variante können abweichen. Die Katalogabdeckung unterscheidet sich nach Sprache und Set.
+
+Für koreanische Sets fehlen bei TCGdex häufig Kartenlisten. In diesem Fall zeigt die App, sofern vorhanden, eine ausdrücklich gekennzeichnete japanische Vergleichsliste mit gleicher Set-ID. Bei koreanischer Suche werden außerdem japanische Vergleichssets angeboten. Diese Listen sind kein Nachweis für die koreanische Ausgabe oder deren Boosterinhalt.
+
+Für japanische und vereinfacht chinesische Setlisten ergänzt die Übersicht, falls eindeutig zuordenbar, Bilder und internationale Kartenverweise aus [CardCorpus](https://github.com/cardcorpus/pokemon-card-dataset) (Daten: CC BY 4.0, siehe dortige Rechtehinweise). Über einen eindeutigen internationalen Verweis zeigt sie nach Möglichkeit den deutschen Kartennamen aus TCGdex und zusätzlich den Originalnamen. Karten desselben Sets mit identischem Original- und CardCorpus-Namen übernehmen diesen deutschen Namen nur, wenn die Zuordnung eindeutig ist; nicht für jede Karte ist ein deutscher Name vorhanden. Fehlt das ursprüngliche Bild oder kann es nicht geladen werden, wird ein verfügbares CardCorpus-Bild verwendet; andernfalls bleibt die bestehende Ersatzbildsuche aktiv. CardCorpus führt keine koreanischen Sets.
+
+Die Übersicht ist eine Setliste, keine verifizierte Packungszusammensetzung: Einträge können fehlen oder Karten enthalten, die nicht aus einem Booster dieses Produkts stammen. Auch Glanzvarianten sind nicht unbedingt einzeln aufgeführt. Ziehwahrscheinlichkeiten werden nicht angezeigt.
+
+Standardmäßig ist der Server nur auf diesem Rechner erreichbar. Für Änderungen an bestehenden Karten ist das unten beschriebene Passwort erforderlich. Der Port kann über `PORT`, der Pfad zur Datenbank über `BINDER_DB` geändert werden. Beispiel:
 
 ```powershell
 $env:PORT = "3001"
@@ -52,6 +66,12 @@ npm start
 ### Speicherort der Sammlung
 
 Ohne weitere Einstellung liegt die Sammlung in `collection.json`. Ist die Umgebungsvariable `DATABASE_URL` gesetzt (z. B. die Connection String eines Neon-Postgres), speichert der Server die Sammlung stattdessen in der Tabelle `collection` (wird automatisch angelegt). Ist die Tabelle noch leer, wird sie einmalig aus der lokalen `collection.json` befüllt, sonst aus den Startdaten. Die Variable enthält ein Passwort und gehört nicht ins Repository.
+
+### Passwort für Änderungen
+
+Setze `EDIT_PASSWORD` als Umgebungsvariable, lokal beispielsweise vor `npm start` in PowerShell mit `$env:EDIT_PASSWORD = "dein-sicheres-passwort"`, auf Render unter **Environment**. Verwende ein langes, zufälliges Passwort und veröffentliche es nicht. Ohne diese Variable sind Änderungen und das Entfernen bestehender Karten gesperrt. Beim Verknüpfen bzw. Ändern eines Katalogeintrags und beim Entfernen wird das Passwort jeweils abgefragt; es wird nicht dauerhaft im Browser gespeichert. Auch die API für nachträgliche Glanzänderungen ist geschützt. Nach zehn falschen Eingaben sind Änderungen für 15 Minuten serverweit gesperrt; ein Serverneustart setzt diese Sperre zurück.
+
+Das Hinzufügen und das Ansehen bleiben ausdrücklich ohne Passwort möglich: Jeder mit Zugang kann Karten hinzufügen und dadurch Binderplätze verschieben oder die Sammlung füllen. Für öffentliche Nutzung nur HTTPS verwenden, damit das Passwort nicht unverschlüsselt übertragen wird. Die Kommandozeile verwendet weiterhin die lokale Datei und nicht diesen Web-Passwortschutz.
 
 ### Alternative: Kommandozeile
 
